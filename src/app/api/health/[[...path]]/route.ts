@@ -3,7 +3,13 @@ import { isSupabaseConfigured } from '@/lib/supabase/server';
 
 export const dynamic = 'force-dynamic';
 
-export function GET() {
+export function GET(request: Request) {
+  console.info('[healthcheck] GET', {
+    url: request.url,
+    host: request.headers.get('host'),
+    userAgent: request.headers.get('user-agent'),
+  });
+
   return NextResponse.json(
     {
       status: 'ok',
@@ -19,7 +25,13 @@ export function GET() {
   );
 }
 
-export function HEAD() {
+export function HEAD(request: Request) {
+  console.info('[healthcheck] HEAD', {
+    url: request.url,
+    host: request.headers.get('host'),
+    userAgent: request.headers.get('user-agent'),
+  });
+
   return new NextResponse(null, {
     status: 200,
     headers: {

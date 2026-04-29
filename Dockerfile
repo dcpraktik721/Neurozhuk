@@ -42,4 +42,7 @@ USER nextjs
 
 EXPOSE 3000
 
-CMD ["node", "server.js"]
+# Force a public bind host at process start. Some managed platforms inject
+# HOSTNAME with the container ID, and Next standalone will bind to it instead
+# of 0.0.0.0 unless we override it at launch time.
+CMD ["sh", "-c", "HOSTNAME=0.0.0.0 PORT=${PORT:-3000} node server.js"]

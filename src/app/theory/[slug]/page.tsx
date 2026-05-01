@@ -151,7 +151,7 @@ export default async function TheoryArticlePage({
                 href={`/theory/${prev.slug}`}
                 className="group flex flex-col p-5 rounded-2xl border border-slate-100 hover:border-emerald-200 hover:bg-emerald-50/50 transition-all"
               >
-                <span className="text-xs font-medium text-slate-400 mb-1">
+                <span className="text-xs font-medium text-slate-50 mb-1">
                   ← Предыдущая статья
                 </span>
                 <span className="text-sm font-semibold text-slate-900 group-hover:text-emerald-700 transition-colors">
@@ -166,7 +166,7 @@ export default async function TheoryArticlePage({
                 href={`/theory/${next.slug}`}
                 className="group flex flex-col items-end text-right p-5 rounded-2xl border border-slate-100 hover:border-emerald-200 hover:bg-emerald-50/50 transition-all"
               >
-                <span className="text-xs font-medium text-slate-400 mb-1">
+                <span className="text-xs font-medium text-slate-50 mb-1">
                   Следующая статья →
                 </span>
                 <span className="text-sm font-semibold text-slate-900 group-hover:text-emerald-700 transition-colors">

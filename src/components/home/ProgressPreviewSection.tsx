@@ -67,7 +67,7 @@ export default function ProgressPreviewSection() {
                   </div>
                   <div>
                     <p className="font-bold text-slate-900 text-sm">Недельный отчёт</p>
-                    <p className="text-xs text-slate-400">Очки за неделю</p>
+                    <p className="text-xs text-slate-50">Очки за неделю</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-1 px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 text-xs font-semibold">
@@ -89,7 +89,7 @@ export default function ProgressPreviewSection() {
                         className={`absolute bottom-0 left-0 right-0 ${item.color} rounded-t-lg`}
                       />
                     </div>
-                    <span className="text-xs text-slate-400">{item.day}</span>
+                    <span className="text-xs text-slate-50">{item.day}</span>
                   </div>
                 ))}
               </div>
@@ -98,21 +98,21 @@ export default function ProgressPreviewSection() {
               <div className="grid grid-cols-3 gap-3">
                 <div className="bg-white rounded-xl p-3 text-center border border-slate-100">
                   <p className="text-lg font-bold text-slate-900">540</p>
-                  <p className="text-xs text-slate-400">Лучший счёт</p>
+                  <p className="text-xs text-slate-50">Лучший счёт</p>
                 </div>
                 <div className="bg-white rounded-xl p-3 text-center border border-slate-100">
                   <div className="flex items-center justify-center gap-1">
                     <Flame className="w-4 h-4 text-orange-500" />
                     <p className="text-lg font-bold text-slate-900">7</p>
                   </div>
-                  <p className="text-xs text-slate-400">Дней подряд</p>
+                  <p className="text-xs text-slate-50">Дней подряд</p>
                 </div>
                 <div className="bg-white rounded-xl p-3 text-center border border-slate-100">
                   <div className="flex items-center justify-center gap-1">
                     <Star className="w-4 h-4 text-amber-500" />
                     <p className="text-lg font-bold text-slate-900">92%</p>
                   </div>
-                  <p className="text-xs text-slate-400">Точность</p>
+                  <p className="text-xs text-slate-50">Точность</p>
                 </div>
               </div>
             </div>

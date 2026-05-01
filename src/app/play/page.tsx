@@ -183,7 +183,7 @@ export default function PlayPage() {
   }, [mode, difficultyMode, resetCounters]);
 
   const isActive = gameState === 'playing' || gameState === 'paused';
-  const mobileStatLabelClassName = 'text-xs text-slate-200';
+  const mobileStatLabelClassName = 'text-xs text-slate-50';
 
   // Background music: play during active game (playing or paused),
   // stop on idle / ended. Pauses during in-game pause.
@@ -207,7 +207,7 @@ export default function PlayPage() {
               <Bug className="w-6 h-6 text-green-400" />
               <span className="text-lg font-bold text-white">Поймай Жука</span>
             </div>
-            <p className="text-sm text-slate-400 hidden sm:block">Математическая аркада</p>
+            <p className="text-sm text-slate-50 hidden sm:block">Математическая аркада</p>
           </div>
         </header>
 

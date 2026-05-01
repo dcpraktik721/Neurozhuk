@@ -36,7 +36,7 @@ export default function TermsPage() {
             <h1 className="text-3xl md:text-4xl font-extrabold text-white mb-3">
               Пользовательское соглашение
             </h1>
-            <p className="text-slate-400 text-sm">
+            <p className="text-slate-50 text-sm">
               Последнее обновление: {LAST_UPDATED}
             </p>
           </div>

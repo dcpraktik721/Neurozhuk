@@ -247,12 +247,12 @@ export default function DashboardPage() {
               {sessions.length === 0 ? (
                 <div className="text-center py-12">
                   <div className="w-14 h-14 mx-auto mb-4 flex items-center justify-center rounded-2xl bg-slate-100">
-                    <Play className="w-6 h-6 text-slate-400" />
+                    <Play className="w-6 h-6 text-slate-50" />
                   </div>
                   <p className="text-slate-700 font-semibold mb-1">
                     Сыграйте первую партию
                   </p>
-                  <p className="text-sm text-slate-400 mb-4">
+                  <p className="text-sm text-slate-50 mb-4">
                     История тренировок появится здесь
                   </p>
                   <Link
@@ -268,19 +268,19 @@ export default function DashboardPage() {
                   <table className="w-full">
                     <thead>
                       <tr className="border-b border-slate-100">
-                        <th className="text-left text-xs font-semibold text-slate-400 uppercase tracking-wider pb-3">
+                        <th className="text-left text-xs font-semibold text-slate-50 uppercase tracking-wider pb-3">
                           Дата
                         </th>
-                        <th className="text-left text-xs font-semibold text-slate-400 uppercase tracking-wider pb-3">
+                        <th className="text-left text-xs font-semibold text-slate-50 uppercase tracking-wider pb-3">
                           Режим
                         </th>
-                        <th className="text-right text-xs font-semibold text-slate-400 uppercase tracking-wider pb-3">
+                        <th className="text-right text-xs font-semibold text-slate-50 uppercase tracking-wider pb-3">
                           Очки
                         </th>
-                        <th className="text-right text-xs font-semibold text-slate-400 uppercase tracking-wider pb-3">
+                        <th className="text-right text-xs font-semibold text-slate-50 uppercase tracking-wider pb-3">
                           Точность
                         </th>
-                        <th className="text-right text-xs font-semibold text-slate-400 uppercase tracking-wider pb-3">
+                        <th className="text-right text-xs font-semibold text-slate-50 uppercase tracking-wider pb-3">
                           Время
                         </th>
                       </tr>
@@ -360,7 +360,7 @@ export default function DashboardPage() {
                         >
                           {achievement.title}
                         </p>
-                        <p className="text-xs text-slate-400 truncate">
+                        <p className="text-xs text-slate-50 truncate">
                           {achievement.description}
                         </p>
                       </div>

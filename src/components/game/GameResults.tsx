@@ -92,7 +92,7 @@ export default function GameResults({
           {/* Score */}
           <div className="mb-3">
             <p className="text-6xl font-bold text-white tabular-nums">{session.score}</p>
-            <p className="text-sm text-slate-400 mt-1">очков</p>
+            <p className="text-sm text-slate-50 mt-1">очков</p>
           </div>
 
           {/* Rank badge */}
@@ -107,7 +107,7 @@ export default function GameResults({
           </div>
 
           {nextRank && (
-            <p className="text-xs text-slate-400 mt-1">
+            <p className="text-xs text-slate-50 mt-1">
               До звания «<span style={{ color: nextRank.color }}>{nextRank.name}</span>» -- {pointsToNext} очков
             </p>
           )}
@@ -119,38 +119,38 @@ export default function GameResults({
             <div className="bg-slate-900/60 rounded-xl p-3 text-center">
               <Target className="w-4 h-4 text-cyan-400 mx-auto mb-1" />
               <p className="text-2xl font-bold text-white">{session.accuracy}%</p>
-              <p className="text-xs text-slate-400">Точность</p>
+              <p className="text-xs text-slate-50">Точность</p>
             </div>
             <div className="bg-slate-900/60 rounded-xl p-3 text-center">
               <Timer className="w-4 h-4 text-blue-400 mx-auto mb-1" />
               <p className="text-xl font-bold text-white">{formatDuration(session.duration)}</p>
-              <p className="text-xs text-slate-400">Время</p>
+              <p className="text-xs text-slate-50">Время</p>
             </div>
             <div className="bg-slate-900/60 rounded-xl p-3 text-center">
               <Flame className="w-4 h-4 text-orange-400 mx-auto mb-1" />
               <p className="text-2xl font-bold text-white">{session.maxStreak}</p>
-              <p className="text-xs text-slate-400">Макс. серия</p>
+              <p className="text-xs text-slate-50">Макс. серия</p>
             </div>
             <div className="bg-slate-900/60 rounded-xl p-3 text-center">
               <TrendingUp className="w-4 h-4 text-purple-400 mx-auto mb-1" />
               <p className="text-2xl font-bold text-white">{session.level}</p>
-              <p className="text-xs text-slate-400">Уровень</p>
+              <p className="text-xs text-slate-50">Уровень</p>
             </div>
             <div className="bg-slate-900/60 rounded-xl p-3 text-center">
               <Trophy className="w-4 h-4 text-yellow-400 mx-auto mb-1" />
               <p className="text-2xl font-bold text-white">{session.maxCombo}</p>
-              <p className="text-xs text-slate-400">Макс. комбо</p>
+              <p className="text-xs text-slate-50">Макс. комбо</p>
             </div>
             <div className="bg-slate-900/60 rounded-xl p-3 text-center">
               <CheckCircle className="w-4 h-4 text-green-400 mx-auto mb-1" />
               <p className="text-2xl font-bold text-white">{session.totalCorrect ?? session.correctAnswers}</p>
-              <p className="text-xs text-slate-400">Правильных</p>
+              <p className="text-xs text-slate-50">Правильных</p>
             </div>
             {(session.totalWrong ?? 0) > 0 && (
               <div className="bg-slate-900/60 rounded-xl p-3 text-center col-span-2">
                 <XCircle className="w-4 h-4 text-red-400 mx-auto mb-1" />
                 <p className="text-2xl font-bold text-white">{session.totalWrong}</p>
-                <p className="text-xs text-slate-400">Ошибок</p>
+                <p className="text-xs text-slate-50">Ошибок</p>
               </div>
             )}
           </div>
@@ -236,7 +236,7 @@ function SaveStatusBanner({ status, error }: { status: SaveStatus; error: string
   }
   if (status === 'unauthenticated') {
     return (
-      <div className="flex items-start gap-2 rounded-xl border border-slate-600/40 bg-slate-700/30 px-3 py-2 text-sm text-slate-200">
+      <div className="flex items-start gap-2 rounded-xl border border-slate-600/40 bg-slate-700/30 px-3 py-2 text-sm text-slate-50">
         <Save className="w-4 h-4 mt-0.5 flex-shrink-0" />
         <span>Зарегистрируйтесь, чтобы сохранять результаты и отслеживать прогресс.</span>
       </div>
@@ -273,7 +273,7 @@ function SaveActionButton({ status, onClose }: { status: SaveStatus; onClose: ()
       <button
         type="button"
         disabled
-        className="flex-1 py-2.5 px-4 border border-slate-600/50 text-slate-400 rounded-xl font-medium flex items-center justify-center gap-2 text-sm opacity-70 cursor-progress"
+        className="flex-1 py-2.5 px-4 border border-slate-600/50 text-slate-50 rounded-xl font-medium flex items-center justify-center gap-2 text-sm opacity-70 cursor-progress"
       >
         <Loader2 className="w-4 h-4 animate-spin" />
         Сохраняем

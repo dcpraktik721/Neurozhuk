@@ -290,7 +290,7 @@ export default function ProgressPage() {
                 <h2 className="text-lg font-bold text-slate-900">
                   Динамика результатов
                 </h2>
-                <p className="text-sm text-slate-400">
+                <p className="text-sm text-slate-50">
                   Средний балл по неделям
                 </p>
               </div>
@@ -301,7 +301,7 @@ export default function ProgressPage() {
                 <p className="text-slate-700 font-semibold mb-1">
                   Пока нет данных
                 </p>
-                <p className="text-sm text-slate-400">
+                <p className="text-sm text-slate-50">
                   Сыграйте несколько партий, чтобы увидеть динамику
                 </p>
               </div>
@@ -323,7 +323,7 @@ export default function ProgressPage() {
                       transition={{ duration: 0.6, delay: 0.3 + index * 0.05 }}
                       className="w-full rounded-t-lg bg-gradient-to-t from-green-500 to-teal-400 min-h-[4px]"
                     />
-                    <span className="text-xs text-slate-400 mt-1">
+                    <span className="text-xs text-slate-50 mt-1">
                       {item.week}
                     </span>
                   </div>
@@ -345,7 +345,7 @@ export default function ProgressPage() {
               </div>
               <div>
                 <h2 className="text-lg font-bold text-slate-900">Активность</h2>
-                <p className="text-sm text-slate-400">Последние 28 дней</p>
+                <p className="text-sm text-slate-50">Последние 28 дней</p>
               </div>
             </div>
 
@@ -360,7 +360,7 @@ export default function ProgressPage() {
             </div>
 
             <div className="flex items-center justify-between mt-4">
-              <span className="text-xs text-slate-400">Меньше</span>
+              <span className="text-xs text-slate-50">Меньше</span>
               <div className="flex gap-1">
                 {[0, 1, 2, 3].map((level) => (
                   <div
@@ -369,7 +369,7 @@ export default function ProgressPage() {
                   />
                 ))}
               </div>
-              <span className="text-xs text-slate-400">Больше</span>
+              <span className="text-xs text-slate-50">Больше</span>
             </div>
 
             {/* Streak info */}
@@ -402,7 +402,7 @@ export default function ProgressPage() {
               <h2 className="text-lg font-bold text-slate-900">
                 Прогресс рангов
               </h2>
-              <p className="text-sm text-slate-400">
+              <p className="text-sm text-slate-50">
                 Текущий ранг:{' '}
                 <span
                   className="font-semibold"
@@ -443,7 +443,7 @@ export default function ProgressPage() {
                       </span>
                       <span
                         className={`text-[10px] ${
-                          isCurrent ? 'text-slate-300' : 'text-slate-400'
+                          isCurrent ? 'text-slate-300' : 'text-slate-50'
                         }`}
                       >
                         {rank.minScore}+
@@ -483,12 +483,12 @@ export default function ProgressPage() {
             {historyRows.length === 0 ? (
               <div className="text-center py-12">
                 <div className="w-14 h-14 mx-auto mb-4 flex items-center justify-center rounded-2xl bg-slate-100">
-                  <Play className="w-6 h-6 text-slate-400" />
+                  <Play className="w-6 h-6 text-slate-50" />
                 </div>
                 <p className="text-slate-700 font-semibold mb-1">
                   Сыграйте первую партию
                 </p>
-                <p className="text-sm text-slate-400 mb-4">
+                <p className="text-sm text-slate-50 mb-4">
                   История тренировок появится здесь
                 </p>
                 <Link
@@ -503,22 +503,22 @@ export default function ProgressPage() {
               <table className="w-full">
                 <thead>
                   <tr className="border-b border-slate-100">
-                    <th className="text-left text-xs font-semibold text-slate-400 uppercase tracking-wider pb-3">
+                    <th className="text-left text-xs font-semibold text-slate-50 uppercase tracking-wider pb-3">
                       Дата
                     </th>
-                    <th className="text-left text-xs font-semibold text-slate-400 uppercase tracking-wider pb-3">
+                    <th className="text-left text-xs font-semibold text-slate-50 uppercase tracking-wider pb-3">
                       Режим
                     </th>
-                    <th className="text-right text-xs font-semibold text-slate-400 uppercase tracking-wider pb-3">
+                    <th className="text-right text-xs font-semibold text-slate-50 uppercase tracking-wider pb-3">
                       Очки
                     </th>
-                    <th className="text-right text-xs font-semibold text-slate-400 uppercase tracking-wider pb-3">
+                    <th className="text-right text-xs font-semibold text-slate-50 uppercase tracking-wider pb-3">
                       Точность
                     </th>
-                    <th className="text-right text-xs font-semibold text-slate-400 uppercase tracking-wider pb-3">
+                    <th className="text-right text-xs font-semibold text-slate-50 uppercase tracking-wider pb-3">
                       Время
                     </th>
-                    <th className="text-right text-xs font-semibold text-slate-400 uppercase tracking-wider pb-3">
+                    <th className="text-right text-xs font-semibold text-slate-50 uppercase tracking-wider pb-3">
                       Ранг
                     </th>
                   </tr>
@@ -577,7 +577,7 @@ export default function ProgressPage() {
             </div>
             <div>
               <h2 className="text-lg font-bold text-slate-900">Достижения</h2>
-              <p className="text-sm text-slate-400">
+              <p className="text-sm text-slate-50">
                 Открыто:{' '}
                 {achievements.filter((a) => !!a.unlockedAt).length} из{' '}
                 {achievements.length}
@@ -610,7 +610,7 @@ export default function ProgressPage() {
                     >
                       {achievement.title}
                     </p>
-                    <p className="text-[10px] text-slate-400 leading-tight">
+                    <p className="text-[10px] text-slate-50 leading-tight">
                       {achievement.description}
                     </p>
                   </div>

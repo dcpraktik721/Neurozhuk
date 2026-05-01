@@ -148,7 +148,7 @@ function AccordionItem({
           {item.question}
         </span>
         <ChevronDown
-          className={`w-5 h-5 text-slate-400 flex-shrink-0 mt-0.5 transition-transform duration-300 ${
+          className={`w-5 h-5 text-slate-50 flex-shrink-0 mt-0.5 transition-transform duration-300 ${
             isOpen ? 'rotate-180' : ''
           }`}
         />

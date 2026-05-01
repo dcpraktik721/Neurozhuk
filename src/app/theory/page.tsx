@@ -91,7 +91,7 @@ export default function TheoryPage() {
                   {article.description}
                 </p>
                 <div className="flex items-center justify-between">
-                  <span className="inline-flex items-center gap-1.5 text-xs text-slate-400">
+                  <span className="inline-flex items-center gap-1.5 text-xs text-slate-50">
                     <Clock className="w-3.5 h-3.5" />
                     {article.readTime}
                   </span>

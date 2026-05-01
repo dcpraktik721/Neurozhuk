@@ -48,7 +48,7 @@ export default function GameStats({
   const rankObj = RANKS.find((r) => r.name === rank.name);
   const rankEmoji = rankObj && 'emoji' in rankObj ? (rankObj as typeof rankObj & { emoji: string }).emoji : '';
   const isActive = gameState === 'playing' || gameState === 'paused';
-  const statLabelClassName = 'text-xs text-slate-200 uppercase tracking-wider font-medium';
+  const statLabelClassName = 'text-xs text-slate-50 uppercase tracking-wider font-medium';
 
   return (
     <div className="space-y-3">
@@ -69,7 +69,7 @@ export default function GameStats({
         <p className="text-4xl font-bold text-white tabular-nums">{score}</p>
         <div className="flex items-center gap-1.5 mt-1">
           <Trophy className="w-3 h-3 text-amber-400" />
-          <span className="text-xs text-slate-200">Рекорд: <span className="text-amber-400 font-medium">{bestScore}</span></span>
+          <span className="text-xs text-slate-50">Рекорд: <span className="text-amber-400 font-medium">{bestScore}</span></span>
         </div>
       </div>
 

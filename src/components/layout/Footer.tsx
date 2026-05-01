@@ -96,28 +96,28 @@ export default function Footer() {
                 Поймай Жука
               </span>
             </Link>
-            <p className="text-sm text-slate-400 leading-relaxed mb-6">
+            <p className="text-sm text-slate-50 leading-relaxed mb-6">
               Онлайн-платформа для развития когнитивных навыков. Тренируйте внимание, скорость мышления и арифметику в игровой форме.
             </p>
             {/* Social Links */}
             <div className="flex items-center gap-3">
               <a
                 href="#"
-                className="w-9 h-9 flex items-center justify-center rounded-lg bg-slate-800 text-slate-400 hover:bg-slate-700 hover:text-white transition-all duration-200"
+                className="w-9 h-9 flex items-center justify-center rounded-lg bg-slate-800 text-slate-50 hover:bg-slate-700 hover:text-white transition-all duration-200"
                 aria-label="Сайт"
               >
                 <Globe className="w-4 h-4" />
               </a>
               <a
                 href="#"
-                className="w-9 h-9 flex items-center justify-center rounded-lg bg-slate-800 text-slate-400 hover:bg-slate-700 hover:text-white transition-all duration-200"
+                className="w-9 h-9 flex items-center justify-center rounded-lg bg-slate-800 text-slate-50 hover:bg-slate-700 hover:text-white transition-all duration-200"
                 aria-label="Сообщения"
               >
                 <MessageCircle className="w-4 h-4" />
               </a>
               <a
                 href={`mailto:${CONTACT_EMAIL}`}
-                className="w-9 h-9 flex items-center justify-center rounded-lg bg-slate-800 text-slate-400 hover:bg-slate-700 hover:text-white transition-all duration-200"
+                className="w-9 h-9 flex items-center justify-center rounded-lg bg-slate-800 text-slate-50 hover:bg-slate-700 hover:text-white transition-all duration-200"
                 aria-label="Email"
               >
                 <Mail className="w-4 h-4" />
@@ -136,7 +136,7 @@ export default function Footer() {
                   <li key={link.name}>
                     <Link
                       href={link.href}
-                      className="text-sm text-slate-400 hover:text-emerald-400 transition-colors duration-200"
+                      className="text-sm text-slate-50 hover:text-emerald-400 transition-colors duration-200"
                     >
                       {link.name}
                     </Link>

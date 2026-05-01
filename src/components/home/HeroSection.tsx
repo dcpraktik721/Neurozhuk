@@ -33,9 +33,9 @@ export default function HeroSection() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-900/18 backdrop-blur-sm border border-white/25 text-white text-sm font-semibold mb-8 shadow-lg shadow-slate-900/10"
+            className="inline-flex max-w-[calc(100vw-2rem)] items-center justify-center gap-2.5 px-5 py-3 sm:px-6 sm:py-3.5 rounded-full bg-slate-900/18 backdrop-blur-sm border border-white/25 text-white text-base sm:text-lg font-semibold leading-snug text-center mb-8 shadow-lg shadow-slate-900/10"
           >
-            <span className="text-lg">🧠</span>
+            <span className="text-3xl sm:text-2xl leading-none">🧠</span>
             Бесплатная платформа для когнитивного развития
           </motion.div>
 

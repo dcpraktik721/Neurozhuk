@@ -76,7 +76,7 @@ export default function GameControls({
                 : 'text-slate-200 hover:text-white'
             } disabled:opacity-60`}
           >
-            Трен.
+            Тренинг
           </button>
         </div>
       </div>

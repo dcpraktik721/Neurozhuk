@@ -41,6 +41,7 @@ interface GameCanvasProps {
   mode: GameMode;
   difficultyMode: DifficultyMode;
   gameState: GameState;
+  equation: string;
   onGameEnd: (session: GameSession) => void;
   onScoreChange: (score: number) => void;
   onEquationChange: (equation: string) => void;
@@ -57,6 +58,7 @@ interface GameCanvasProps {
 
 export default function GameCanvas({
   gameState,
+  equation,
   onGameEnd,
   onScoreChange,
   onEquationChange,
@@ -191,9 +193,27 @@ export default function GameCanvas({
         )}
       </div>
 
+      {/* Mobile equation bar below canvas so the play area stays visible */}
+      {isMobile && (gameState === 'playing' || gameState === 'paused') && equation && (
+        <div className="mx-auto mt-0 w-full max-w-[calc(100%-40px)] rounded-2xl border-2 border-amber-400 bg-gradient-to-r from-amber-700 to-orange-700 px-3 py-1.5 text-center shadow-lg shadow-amber-900/30">
+          <p
+            className="mb-0 text-[9px] font-extrabold uppercase tracking-[0.16em]"
+            style={{ color: '#ffffff' }}
+          >
+            Найди жука с числом
+          </p>
+          <p
+            className="text-[26px] font-black leading-none tracking-[0.03em]"
+            style={{ color: '#ffffff', textShadow: '0 2px 8px rgba(0,0,0,0.4)' }}
+          >
+            {equation}
+          </p>
+        </div>
+      )}
+
       {/* Mobile touch controls */}
       {isMobile && gameState === 'playing' && (
-        <div className="mt-4 flex justify-center">
+        <div className="mt-1 flex justify-center">
           <div className="grid grid-cols-3 gap-2 w-44">
             <div />
             <button

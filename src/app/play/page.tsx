@@ -253,14 +253,6 @@ export default function PlayPage() {
 
             {/* Center: Canvas + bars */}
             <div className="order-2 lg:order-2">
-              {/* Equation bar above canvas on mobile */}
-              {isActive && equation && (
-                <div className="lg:hidden bg-gradient-to-r from-amber-700 to-orange-700 border-2 border-amber-400 rounded-2xl p-4 mb-3 text-center shadow-lg shadow-amber-900/30">
-                  <p className="text-xs uppercase tracking-widest font-bold mb-1" style={{ color: '#ffffff' }}>Найди жука с числом</p>
-                  <p className="text-3xl font-black tracking-wide" style={{ color: '#ffffff', textShadow: '0 2px 8px rgba(0,0,0,0.4)' }}>{equation}</p>
-                </div>
-              )}
-
               {/* Mobile score bar */}
               {isActive && (
                 <div className="lg:hidden flex items-center justify-between bg-slate-800/50 rounded-xl px-4 py-2 mb-3 flex-wrap gap-2">
@@ -297,6 +289,7 @@ export default function PlayPage() {
                 mode={mode}
                 difficultyMode={difficultyMode}
                 gameState={gameState}
+                equation={equation}
                 onGameEnd={handleGameEnd}
                 onScoreChange={handleScoreChange}
                 onEquationChange={handleEquationChange}

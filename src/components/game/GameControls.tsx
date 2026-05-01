@@ -37,7 +37,7 @@ export default function GameControls({
   const isIdle = gameState === 'idle' || gameState === 'ended';
   const isPlaying = gameState === 'playing';
   const isPaused = gameState === 'paused';
-  const sectionLabelClassName = 'text-xs text-white uppercase tracking-wider mb-2 font-semibold';
+  const sectionLabelClassName = 'text-[13px] text-slate-100 uppercase tracking-[0.14em] mb-2.5 font-bold';
 
   return (
     <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-2xl p-4 space-y-4">
@@ -206,17 +206,17 @@ export default function GameControls({
 
       {/* Keyboard hints */}
       <div className="pt-2 border-t border-slate-700/50">
-        <div className="flex items-center gap-1.5 text-slate-300 mb-2">
+        <div className="flex items-center gap-1.5 text-slate-200 mb-2.5">
           <Keyboard className="w-3.5 h-3.5" />
-          <span className="text-xs font-semibold uppercase tracking-wider text-white">Управление</span>
+          <span className="text-[13px] font-bold uppercase tracking-[0.14em] text-slate-100">Управление</span>
         </div>
         <div className="space-y-1">
           <div className="flex justify-between text-xs">
-            <span className="text-slate-200">Движение</span>
+            <span className="text-slate-100">Движение</span>
             <span className="text-slate-300">← ↑ → ↓ / WASD</span>
           </div>
           <div className="flex justify-between text-xs">
-            <span className="text-slate-200">Пауза</span>
+            <span className="text-slate-100">Пауза</span>
             <span className="text-slate-300">Пробел</span>
           </div>
         </div>

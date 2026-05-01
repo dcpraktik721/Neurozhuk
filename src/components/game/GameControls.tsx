@@ -37,12 +37,13 @@ export default function GameControls({
   const isIdle = gameState === 'idle' || gameState === 'ended';
   const isPlaying = gameState === 'playing';
   const isPaused = gameState === 'paused';
+  const sectionLabelClassName = 'text-xs text-white uppercase tracking-wider mb-2 font-semibold';
 
   return (
     <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-2xl p-4 space-y-4">
       {/* Mode selector — 3 options */}
       <div>
-        <p className="text-xs text-slate-50 uppercase tracking-wider mb-2 font-medium">Режим игры</p>
+        <p className={sectionLabelClassName}>Режим игры</p>
         <div className="flex gap-1 bg-slate-900/60 rounded-xl p-1">
           <button
             onClick={() => onModeChange('normal')}
@@ -50,7 +51,7 @@ export default function GameControls({
             className={`flex-1 px-2 py-2 rounded-lg text-xs font-medium transition-all ${
               mode === 'normal'
                 ? 'bg-gradient-to-r from-green-600 to-teal-600 text-white shadow-lg shadow-green-600/25'
-                : 'text-slate-50 hover:text-white'
+                : 'text-slate-200 hover:text-white'
             } disabled:opacity-60`}
           >
             Обычный
@@ -61,7 +62,7 @@ export default function GameControls({
             className={`flex-1 px-2 py-2 rounded-lg text-xs font-medium transition-all ${
               mode === 'timed'
                 ? 'bg-gradient-to-r from-orange-600 to-amber-600 text-white shadow-lg shadow-orange-600/25'
-                : 'text-slate-50 hover:text-white'
+                : 'text-slate-200 hover:text-white'
             } disabled:opacity-60`}
           >
             На время
@@ -72,7 +73,7 @@ export default function GameControls({
             className={`flex-1 px-2 py-2 rounded-lg text-xs font-medium transition-all ${
               mode === 'practice'
                 ? 'bg-gradient-to-r from-blue-600 to-cyan-600 text-white shadow-lg shadow-blue-600/25'
-                : 'text-slate-50 hover:text-white'
+                : 'text-slate-200 hover:text-white'
             } disabled:opacity-60`}
           >
             Трен.
@@ -82,7 +83,7 @@ export default function GameControls({
 
       {/* Difficulty selector */}
       <div>
-        <p className="text-xs text-slate-50 uppercase tracking-wider mb-2 font-medium">Сложность</p>
+        <p className={sectionLabelClassName}>Сложность</p>
         <div className="flex flex-col gap-1">
           <button
             onClick={() => onDifficultyModeChange('easy')}
@@ -90,7 +91,7 @@ export default function GameControls({
             className={`w-full px-3 py-2 rounded-lg text-xs font-medium transition-all text-left ${
               difficultyMode === 'easy'
                 ? 'bg-green-600/30 border border-green-500/50 text-green-300'
-                : 'bg-slate-900/40 border border-slate-700/50 text-slate-50 hover:text-white'
+                : 'bg-slate-900/40 border border-slate-700/50 text-slate-200 hover:text-white'
             } disabled:opacity-60`}
           >
             🟢 Легкий (с подсказкой)
@@ -101,7 +102,7 @@ export default function GameControls({
             className={`w-full px-3 py-2 rounded-lg text-xs font-medium transition-all text-left ${
               difficultyMode === 'normal'
                 ? 'bg-yellow-600/30 border border-yellow-500/50 text-yellow-300'
-                : 'bg-slate-900/40 border border-slate-700/50 text-slate-50 hover:text-white'
+                : 'bg-slate-900/40 border border-slate-700/50 text-slate-200 hover:text-white'
             } disabled:opacity-60`}
           >
             🟡 Норма (без подсказки)
@@ -111,13 +112,13 @@ export default function GameControls({
 
       {/* Music toggle */}
       <div>
-        <p className="text-xs text-slate-50 uppercase tracking-wider mb-2 font-medium">Музыка</p>
+        <p className={sectionLabelClassName}>Музыка</p>
         <button
           onClick={onMusicToggle}
           className={`w-full px-3 py-2 rounded-lg text-xs font-medium transition-all flex items-center justify-between gap-2 ${
             musicEnabled
               ? 'bg-purple-600/30 border border-purple-500/50 text-purple-200'
-              : 'bg-slate-900/40 border border-slate-700/50 text-slate-50 hover:text-white'
+              : 'bg-slate-900/40 border border-slate-700/50 text-slate-200 hover:text-white'
           }`}
           aria-pressed={musicEnabled}
           aria-label={musicEnabled ? 'Выключить музыку' : 'Включить музыку'}
@@ -205,18 +206,18 @@ export default function GameControls({
 
       {/* Keyboard hints */}
       <div className="pt-2 border-t border-slate-700/50">
-        <div className="flex items-center gap-1.5 text-slate-500 mb-2">
+        <div className="flex items-center gap-1.5 text-slate-300 mb-2">
           <Keyboard className="w-3.5 h-3.5" />
-          <span className="text-xs font-medium uppercase tracking-wider">Управление</span>
+          <span className="text-xs font-semibold uppercase tracking-wider text-white">Управление</span>
         </div>
         <div className="space-y-1">
           <div className="flex justify-between text-xs">
-            <span className="text-slate-50">Движение</span>
-            <span className="text-slate-500">← ↑ → ↓ / WASD</span>
+            <span className="text-slate-200">Движение</span>
+            <span className="text-slate-300">← ↑ → ↓ / WASD</span>
           </div>
           <div className="flex justify-between text-xs">
-            <span className="text-slate-50">Пауза</span>
-            <span className="text-slate-500">Пробел</span>
+            <span className="text-slate-200">Пауза</span>
+            <span className="text-slate-300">Пробел</span>
           </div>
         </div>
       </div>

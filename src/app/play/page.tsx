@@ -183,7 +183,12 @@ export default function PlayPage() {
   }, [mode, difficultyMode, resetCounters]);
 
   const isActive = gameState === 'playing' || gameState === 'paused';
-  const mobileStatLabelClassName = 'text-xs text-slate-50';
+  const mobileStatLabelClassName = 'text-xs font-bold uppercase tracking-[0.08em]';
+  const mobileStatValueClassName = 'text-lg font-black text-white tabular-nums';
+  const mobileStatTextStyle = {
+    color: '#FFFFFF',
+    textShadow: '0 1px 6px rgba(0,0,0,0.42)',
+  } as const;
 
   // Background music: play during active game (playing or paused),
   // stop on idle / ended. Pauses during in-game pause.
@@ -260,28 +265,28 @@ export default function PlayPage() {
               {isActive && (
                 <div className="lg:hidden flex items-center justify-between bg-slate-800/50 rounded-xl px-4 py-2 mb-3 flex-wrap gap-2">
                   <div className="text-center">
-                    <p className={mobileStatLabelClassName}>Очки</p>
-                    <p className="text-lg font-bold text-white">{score}</p>
+                    <p className={mobileStatLabelClassName} style={mobileStatTextStyle}>Очки</p>
+                    <p className={mobileStatValueClassName} style={mobileStatTextStyle}>{score}</p>
                   </div>
                   <div className="text-center">
-                    <p className={mobileStatLabelClassName}>Уровень</p>
-                    <p className="text-lg font-bold text-green-400">{level}</p>
+                    <p className={mobileStatLabelClassName} style={mobileStatTextStyle}>Уровень</p>
+                    <p className={mobileStatValueClassName} style={mobileStatTextStyle}>{level}</p>
                   </div>
                   <div className="text-center">
-                    <p className={mobileStatLabelClassName}>Комбо</p>
-                    <p className={`text-lg font-bold ${combo >= 5 ? 'text-orange-400' : 'text-white'}`}>
+                    <p className={mobileStatLabelClassName} style={mobileStatTextStyle}>Комбо</p>
+                    <p className={mobileStatValueClassName} style={mobileStatTextStyle}>
                       {combo}{combo >= 5 ? '🔥' : ''}
                     </p>
                   </div>
                   <div className="text-center">
-                    <p className={mobileStatLabelClassName}>{mode === 'timed' ? 'Осталось' : 'Время'}</p>
-                    <p className={`text-lg font-bold ${mode === 'timed' && time <= 30 ? 'text-red-400' : 'text-white'}`}>
+                    <p className={mobileStatLabelClassName} style={mobileStatTextStyle}>{mode === 'timed' ? 'Осталось' : 'Время'}</p>
+                    <p className={mobileStatValueClassName} style={mobileStatTextStyle}>
                       {Math.floor(time / 60)}:{(time % 60).toString().padStart(2, '0')}
                     </p>
                   </div>
                   <div className="text-center">
-                    <p className={mobileStatLabelClassName}>Точность</p>
-                    <p className="text-lg font-bold text-white">
+                    <p className={mobileStatLabelClassName} style={mobileStatTextStyle}>Точность</p>
+                    <p className={mobileStatValueClassName} style={mobileStatTextStyle}>
                       {score === 0 && accuracy === 100 ? '—' : `${accuracy}%`}
                     </p>
                   </div>

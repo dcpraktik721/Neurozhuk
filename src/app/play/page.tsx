@@ -207,7 +207,7 @@ export default function PlayPage() {
               <Bug className="w-6 h-6 text-green-400" />
               <span className="text-lg font-bold text-white">Поймай Жука</span>
             </div>
-            <p className="text-sm text-slate-50 hidden sm:block">Математическая аркада</p>
+            <p className="text-sm text-slate-300 hidden sm:block">Математическая аркада</p>
           </div>
         </header>
 

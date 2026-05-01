@@ -183,6 +183,7 @@ export default function PlayPage() {
   }, [mode, difficultyMode, resetCounters]);
 
   const isActive = gameState === 'playing' || gameState === 'paused';
+  const mobileStatLabelClassName = 'text-xs text-slate-200';
 
   // Background music: play during active game (playing or paused),
   // stop on idle / ended. Pauses during in-game pause.
@@ -259,27 +260,27 @@ export default function PlayPage() {
               {isActive && (
                 <div className="lg:hidden flex items-center justify-between bg-slate-800/50 rounded-xl px-4 py-2 mb-3 flex-wrap gap-2">
                   <div className="text-center">
-                    <p className="text-xs text-slate-400">Очки</p>
+                    <p className={mobileStatLabelClassName}>Очки</p>
                     <p className="text-lg font-bold text-white">{score}</p>
                   </div>
                   <div className="text-center">
-                    <p className="text-xs text-slate-400">Уровень</p>
+                    <p className={mobileStatLabelClassName}>Уровень</p>
                     <p className="text-lg font-bold text-green-400">{level}</p>
                   </div>
                   <div className="text-center">
-                    <p className="text-xs text-slate-400">Комбо</p>
+                    <p className={mobileStatLabelClassName}>Комбо</p>
                     <p className={`text-lg font-bold ${combo >= 5 ? 'text-orange-400' : 'text-white'}`}>
                       {combo}{combo >= 5 ? '🔥' : ''}
                     </p>
                   </div>
                   <div className="text-center">
-                    <p className="text-xs text-slate-400">{mode === 'timed' ? 'Осталось' : 'Время'}</p>
+                    <p className={mobileStatLabelClassName}>{mode === 'timed' ? 'Осталось' : 'Время'}</p>
                     <p className={`text-lg font-bold ${mode === 'timed' && time <= 30 ? 'text-red-400' : 'text-white'}`}>
                       {Math.floor(time / 60)}:{(time % 60).toString().padStart(2, '0')}
                     </p>
                   </div>
                   <div className="text-center">
-                    <p className="text-xs text-slate-400">Точность</p>
+                    <p className={mobileStatLabelClassName}>Точность</p>
                     <p className="text-lg font-bold text-white">
                       {score === 0 && accuracy === 100 ? '—' : `${accuracy}%`}
                     </p>

@@ -48,6 +48,7 @@ export default function GameStats({
   const rankObj = RANKS.find((r) => r.name === rank.name);
   const rankEmoji = rankObj && 'emoji' in rankObj ? (rankObj as typeof rankObj & { emoji: string }).emoji : '';
   const isActive = gameState === 'playing' || gameState === 'paused';
+  const statLabelClassName = 'text-xs text-slate-200 uppercase tracking-wider font-medium';
 
   return (
     <div className="space-y-3">
@@ -63,12 +64,12 @@ export default function GameStats({
       <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-2xl p-4">
         <div className="flex items-center gap-2 mb-2">
           <Star className="w-4 h-4 text-green-400" />
-          <span className="text-xs text-slate-400 uppercase tracking-wider font-medium">Очки</span>
+          <span className={statLabelClassName}>Очки</span>
         </div>
         <p className="text-4xl font-bold text-white tabular-nums">{score}</p>
         <div className="flex items-center gap-1.5 mt-1">
           <Trophy className="w-3 h-3 text-amber-400" />
-          <span className="text-xs text-slate-400">Рекорд: <span className="text-amber-400 font-medium">{bestScore}</span></span>
+          <span className="text-xs text-slate-200">Рекорд: <span className="text-amber-400 font-medium">{bestScore}</span></span>
         </div>
       </div>
 
@@ -76,7 +77,7 @@ export default function GameStats({
       {isActive && (
         <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-2xl p-4">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-xs text-slate-400 uppercase tracking-wider font-medium">Уровень</span>
+            <span className={statLabelClassName}>Уровень</span>
             <span className="text-sm font-bold text-white">{level}</span>
           </div>
           <div className="w-full h-2 bg-slate-700 rounded-full overflow-hidden">
@@ -96,7 +97,7 @@ export default function GameStats({
       {isActive && (
         <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-2xl p-4">
           <div className="flex items-center gap-2 mb-1">
-            <span className="text-xs text-slate-400 uppercase tracking-wider font-medium">Комбо</span>
+            <span className={statLabelClassName}>Комбо</span>
           </div>
           <p className={`text-2xl font-bold tabular-nums ${
             combo >= 10 ? 'text-red-400' : combo >= 5 ? 'text-orange-400' : 'text-white'
@@ -110,7 +111,7 @@ export default function GameStats({
       {isActive && (
         <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-2xl p-4">
           <div className="flex items-center gap-2 mb-1">
-            <span className="text-xs text-slate-400 uppercase tracking-wider font-medium">Звание</span>
+            <span className={statLabelClassName}>Звание</span>
           </div>
           <p className="text-lg font-bold" style={{ color: rank.color }}>
             {rankEmoji} {rank.name}
@@ -123,7 +124,7 @@ export default function GameStats({
         <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-2xl p-4">
           <div className="flex items-center gap-2 mb-1">
             <Timer className="w-4 h-4 text-blue-400" />
-            <span className="text-xs text-slate-400 uppercase tracking-wider font-medium">
+            <span className={statLabelClassName}>
               {mode === 'timed' ? 'Осталось' : 'Время'}
             </span>
           </div>
@@ -140,7 +141,7 @@ export default function GameStats({
         <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-2xl p-4">
           <div className="flex items-center gap-2 mb-1">
             <Target className="w-4 h-4 text-cyan-400" />
-            <span className="text-xs text-slate-400 uppercase tracking-wider font-medium">Точность</span>
+            <span className={statLabelClassName}>Точность</span>
           </div>
           <p className="text-2xl font-bold text-white">{accuracy}%</p>
         </div>
@@ -149,7 +150,7 @@ export default function GameStats({
       {/* Correct / Wrong counters */}
       {isActive && (totalCorrect > 0 || totalWrong > 0) && (
         <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-2xl p-4">
-          <p className="text-xs text-slate-400 uppercase tracking-wider font-medium mb-2">Ответы</p>
+          <p className={`${statLabelClassName} mb-2`}>Ответы</p>
           <div className="flex gap-4">
             <div>
               <p className="text-xl font-bold text-green-400">{totalCorrect}</p>
@@ -167,7 +168,7 @@ export default function GameStats({
       {isActive && streak > 0 && (
         <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-2xl p-4">
           <div className="flex items-center gap-2 mb-1">
-            <span className="text-xs text-slate-400 uppercase tracking-wider font-medium">Серия</span>
+            <span className={statLabelClassName}>Серия</span>
           </div>
           <p className={`text-2xl font-bold ${streak >= 5 ? 'text-orange-400' : streak >= 3 ? 'text-amber-400' : 'text-white'}`}>
             {streak}{streak >= 5 ? ' 🔥' : ''}

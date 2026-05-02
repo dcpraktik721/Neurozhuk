@@ -1,48 +1,8 @@
+import Image from 'next/image';
 import Link from 'next/link';
 import { Bug, Globe, MessageCircle, Mail } from 'lucide-react';
 
 const CONTACT_EMAIL = 'levart72@mail.ru';
-
-function LevArtMark() {
-  return (
-    <span
-      className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-neutral-950 p-[3px] shadow-[0_0_0_1px_rgba(255,255,255,0.08)]"
-      aria-hidden="true"
-    >
-      <svg viewBox="0 0 64 64" className="h-full w-full">
-        <defs>
-          <radialGradient id="lev-art-fill" cx="35%" cy="30%" r="75%">
-            <stop offset="0%" stopColor="#F7F3E8" />
-            <stop offset="100%" stopColor="#E4DDC8" />
-          </radialGradient>
-        </defs>
-        <circle cx="32" cy="32" r="29" fill="#F5F2E7" />
-        <circle cx="32" cy="32" r="22.5" fill="url(#lev-art-fill)" stroke="#A9A59D" strokeWidth="1.8" />
-        <text
-          x="13.5"
-          y="37"
-          fontSize="13.5"
-          fontWeight="700"
-          fill="#343434"
-          fontFamily="system-ui, -apple-system, sans-serif"
-        >
-          Lev
-        </text>
-        <circle cx="33.2" cy="33.2" r="2.2" fill="#294BDA" />
-        <text
-          x="37.5"
-          y="37"
-          fontSize="13.5"
-          fontWeight="700"
-          fill="#343434"
-          fontFamily="system-ui, -apple-system, sans-serif"
-        >
-          Art
-        </text>
-      </svg>
-    </span>
-  );
-}
 
 const footerLinks = {
   platform: {
@@ -153,7 +113,13 @@ export default function Footer() {
             &copy; 2024&ndash;2026 Поймай Жука. Все права защищены.
           </p>
           <div className="flex items-center gap-3 text-sm text-slate-500">
-            <LevArtMark />
+            <Image
+              src="/branding/levart-footer-logo.png"
+              alt="Lev.Art"
+              width={44}
+              height={44}
+              className="h-11 w-11 rounded-full object-cover shadow-[0_0_0_1px_rgba(255,255,255,0.08)]"
+            />
             <p>Сделано с заботой о развитии каждого</p>
           </div>
         </div>

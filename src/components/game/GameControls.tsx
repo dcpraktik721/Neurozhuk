@@ -48,7 +48,7 @@ export default function GameControls({
           <button
             onClick={() => onModeChange('normal')}
             disabled={!isIdle}
-            className={`flex-1 px-2 py-2 rounded-lg text-xs font-medium transition-all ${
+            className={`flex min-h-[46px] flex-1 items-center justify-center px-2 py-2 rounded-lg text-center text-xs font-medium leading-tight transition-all ${
               mode === 'normal'
                 ? 'bg-gradient-to-r from-green-600 to-teal-600 text-white shadow-lg shadow-green-600/25'
                 : 'text-slate-200 hover:text-white'
@@ -59,7 +59,7 @@ export default function GameControls({
           <button
             onClick={() => onModeChange('timed')}
             disabled={!isIdle}
-            className={`flex-1 px-2 py-2 rounded-lg text-xs font-medium transition-all ${
+            className={`flex min-h-[46px] flex-1 items-center justify-center px-2 py-2 rounded-lg text-center text-xs font-medium leading-tight transition-all ${
               mode === 'timed'
                 ? 'bg-gradient-to-r from-orange-600 to-amber-600 text-white shadow-lg shadow-orange-600/25'
                 : 'text-slate-200 hover:text-white'
@@ -70,13 +70,17 @@ export default function GameControls({
           <button
             onClick={() => onModeChange('practice')}
             disabled={!isIdle}
-            className={`flex-1 px-2 py-2 rounded-lg text-xs font-medium transition-all ${
+            className={`flex min-h-[46px] flex-1 items-center justify-center px-1.5 py-2 rounded-lg text-center text-[11px] font-medium leading-tight transition-all ${
               mode === 'practice'
                 ? 'bg-gradient-to-r from-blue-600 to-cyan-600 text-white shadow-lg shadow-blue-600/25'
                 : 'text-slate-200 hover:text-white'
             } disabled:opacity-60`}
           >
-            Тренинг
+            <span>
+              Тренинг по
+              <br />
+              Кавашиме
+            </span>
           </button>
         </div>
       </div>

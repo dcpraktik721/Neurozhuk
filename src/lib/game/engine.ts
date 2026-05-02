@@ -8,6 +8,7 @@ import type { Enemy, GameMode, GameState, GameSession, GameConfig, DifficultyMod
 import type { GameCallbacks } from '@/types';
 import { getRank } from '@/types';
 import { getEquationsForLevel, pickRandomEquation } from './equations';
+import { getKavashimaEquationsForLevel } from './kavashima-equations';
 
 export type { GameCallbacks };
 
@@ -307,7 +308,9 @@ export class GameEngine {
   // ── Internal: equations ──
 
   private nextEquation(): void {
-    const pool = getEquationsForLevel(this.level);
+    const pool = this.mode === 'practice'
+      ? getKavashimaEquationsForLevel(this.level)
+      : getEquationsForLevel(this.level);
     const eq = pickRandomEquation(pool);
     this.currentEquation = eq.equation;
     this.currentAnswer = eq.answer;

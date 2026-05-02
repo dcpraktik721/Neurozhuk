@@ -31,7 +31,9 @@ export async function generateMetadata({
   const { slug } = await params;
   const article = getArticleBySlug(slug);
   if (!article) return {};
-  return generatePageMetadata(article.title, article.description, `/theory/${slug}`);
+  return generatePageMetadata(article.title, article.description, `/theory/${slug}`, {
+    openGraphType: 'article',
+  });
 }
 
 /* ------------------------------------------------

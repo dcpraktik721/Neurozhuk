@@ -201,9 +201,6 @@ export default function PlayPage() {
 
   return (
     <>
-      <title>Играть -- Поймай Жука</title>
-      <meta name="description" content="Играйте в математическую игру Поймай Жука! Ловите жуков с правильными ответами, набирайте очки и повышайте своё звание." />
-
       <div className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950">
         {/* Header */}
         <header className="border-b border-slate-800/50 bg-slate-950/80 backdrop-blur-sm sticky top-0 z-30">

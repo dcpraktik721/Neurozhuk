@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
+import { DEFAULT_OG_IMAGE, SITE_NAME, SITE_URL } from '@/lib/seo';
 import './globals.css';
 
 const geistSans = Geist({
@@ -15,10 +16,14 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://neurozhuk.ru'),
+  metadataBase: new URL(SITE_URL),
+  applicationName: SITE_NAME,
   title: {
     default: 'Поймай Жука — Тренируй мозг играючи',
-    template: '%s | Поймай Жука',
+    template: `%s | ${SITE_NAME}`,
+  },
+  alternates: {
+    canonical: '/',
   },
   description:
     'Поймай Жука — онлайн-платформа для развития внимания, скорости мышления и когнитивных навыков. Математические игры для детей и взрослых.',
@@ -35,21 +40,31 @@ export const metadata: Metadata = {
     'тренировка памяти',
     'арифметика онлайн',
   ],
-  authors: [{ name: 'Поймай Жука' }],
-  creator: 'Поймай Жука',
+  authors: [{ name: SITE_NAME }],
+  creator: SITE_NAME,
   openGraph: {
     type: 'website',
     locale: 'ru_RU',
-    siteName: 'Поймай Жука',
+    url: SITE_URL,
+    siteName: SITE_NAME,
     title: 'Поймай Жука — Тренируй мозг играючи',
     description:
       'Онлайн-платформа для развития внимания, скорости мышления и когнитивных навыков. Для детей и взрослых.',
+    images: [
+      {
+        url: DEFAULT_OG_IMAGE,
+        width: 1200,
+        height: 630,
+        alt: 'Поймай Жука — математическая аркада',
+      },
+    ],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Поймай Жука — Тренируй мозг играючи',
     description:
       'Онлайн-платформа для развития когнитивных навыков в игровой форме.',
+    images: [DEFAULT_OG_IMAGE],
   },
   robots: {
     index: true,

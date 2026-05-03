@@ -34,7 +34,8 @@ const footerLinks = {
   legal: {
     title: 'Правовая информация',
     links: [
-      { name: 'Политика конфиденциальности', href: '/privacy' },
+      { name: 'Политика обработки ПДн', href: '/privacy' },
+      { name: 'Согласие на обработку ПДн', href: '/consent' },
       { name: 'Пользовательское соглашение', href: '/terms' },
     ],
   },

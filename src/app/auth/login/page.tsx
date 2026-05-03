@@ -127,6 +127,14 @@ function LoginForm() {
             </>
           )}
         </button>
+        <p className="text-xs leading-relaxed text-slate-500">
+          При входе мы обрабатываем email и технические auth-cookie для проверки аккаунта и защиты сессии.
+          Подробнее —{' '}
+          <Link href="/privacy" className="font-medium text-emerald-600 hover:text-emerald-700">
+            политика обработки персональных данных
+          </Link>
+          .
+        </p>
       </form>
     </div>
   );

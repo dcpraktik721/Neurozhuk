@@ -16,6 +16,7 @@ const staticRoutes: Array<{
   { path: '/parents', changeFrequency: 'monthly', priority: 0.7 },
   { path: '/about', changeFrequency: 'monthly', priority: 0.6 },
   { path: '/privacy', changeFrequency: 'yearly', priority: 0.3 },
+  { path: '/consent', changeFrequency: 'yearly', priority: 0.3 },
   { path: '/terms', changeFrequency: 'yearly', priority: 0.3 },
 ];
 

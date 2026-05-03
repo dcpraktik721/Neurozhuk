@@ -41,6 +41,7 @@ export async function signUp(formData: FormData): Promise<AuthResult> {
   const email = formData.get('email') as string;
   const password = formData.get('password') as string;
   const displayName = formData.get('displayName') as string;
+  const pdnConsent = formData.get('pdnConsent');
   const ageGroupRaw = formData.get('ageGroup');
   const ageGroup =
     ageGroupRaw === 'child' || ageGroupRaw === 'adult' ? ageGroupRaw : 'adult';
@@ -51,6 +52,10 @@ export async function signUp(formData: FormData): Promise<AuthResult> {
 
   if (password.length < 6) {
     return { error: 'Пароль должен содержать минимум 6 символов.' };
+  }
+
+  if (pdnConsent !== 'accepted') {
+    return { error: 'Для регистрации необходимо согласие на обработку персональных данных.' };
   }
 
   const supabase = await createClient();

@@ -27,7 +27,7 @@ export default function RegisterPage() {
       return;
     }
     if (!agreed) {
-      setError('Необходимо принять условия использования');
+      setError('Необходимо принять условия использования и согласие на обработку персональных данных');
       return;
     }
 
@@ -89,7 +89,7 @@ export default function RegisterPage() {
                 htmlFor="name"
                 className="block text-sm font-semibold text-slate-700 mb-1.5"
               >
-                Имя
+                Имя или никнейм
               </label>
               <div className="relative">
                 <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4.5 h-4.5 text-slate-50" />
@@ -99,9 +99,8 @@ export default function RegisterPage() {
                   type="text"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  placeholder="Как вас зовут?"
+                  placeholder="Можно оставить пустым"
                   className="w-full pl-11 pr-4 py-3 rounded-xl border border-slate-200 bg-slate-50 text-slate-900 placeholder:text-slate-50 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all"
-                  required
                   disabled={isPending}
                 />
               </div>
@@ -241,25 +240,35 @@ export default function RegisterPage() {
             <div className="flex items-start gap-3">
               <input
                 id="terms"
+                name="pdnConsent"
                 type="checkbox"
+                value="accepted"
                 checked={agreed}
                 onChange={(e) => setAgreed(e.target.checked)}
                 className="mt-1 w-4 h-4 rounded border-slate-300 text-emerald-500 focus:ring-emerald-500"
+                required
               />
               <label htmlFor="terms" className="text-sm text-slate-500">
-                Я согласен с{' '}
+                Я принимаю{' '}
                 <Link
                   href="/terms"
                   className="text-emerald-600 hover:text-emerald-700 font-medium"
                 >
-                  условиями использования
+                  пользовательское соглашение
                 </Link>{' '}
-                и{' '}
+                и даю{' '}
+                <Link
+                  href="/consent"
+                  className="text-emerald-600 hover:text-emerald-700 font-medium"
+                >
+                  согласие на обработку персональных данных
+                </Link>{' '}
+                для регистрации, ведения аккаунта, сохранения игрового прогресса и обратной связи. Подробнее —{' '}
                 <Link
                   href="/privacy"
                   className="text-emerald-600 hover:text-emerald-700 font-medium"
                 >
-                  политикой конфиденциальности
+                  политика обработки персональных данных
                 </Link>
               </label>
             </div>

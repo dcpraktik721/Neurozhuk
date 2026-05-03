@@ -34,8 +34,8 @@ const footerLinks = {
   legal: {
     title: 'Правовая информация',
     links: [
-      { name: 'Политика обработки ПДн', href: '/privacy' },
-      { name: 'Согласие на обработку ПДн', href: '/consent' },
+      { name: 'Политика обработки', href: '/privacy' },
+      { name: 'Согласие на обработку', href: '/consent' },
       { name: 'Пользовательское соглашение', href: '/terms' },
     ],
   },
@@ -43,7 +43,7 @@ const footerLinks = {
 
 export default function Footer() {
   return (
-    <footer className="bg-slate-900 text-slate-300">
+    <footer className="bg-[#0B1326] text-[#CBD5E1]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Main Footer */}
         <div className="py-12 md:py-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 lg:gap-12">
@@ -57,28 +57,28 @@ export default function Footer() {
                 Поймай Жука
               </span>
             </Link>
-            <p className="text-sm text-slate-50 leading-relaxed mb-6">
+            <p className="mb-6 text-sm leading-relaxed !text-[#64748B]">
               Онлайн-платформа для развития когнитивных навыков. Тренируйте внимание, скорость мышления и арифметику в игровой форме.
             </p>
             {/* Social Links */}
             <div className="flex items-center gap-3">
               <a
                 href="#"
-                className="w-9 h-9 flex items-center justify-center rounded-lg bg-slate-800 text-slate-50 hover:bg-slate-700 hover:text-white transition-all duration-200"
+                className="flex h-9 w-9 items-center justify-center rounded-lg bg-slate-800 text-[#CBD5E1] transition-all duration-200 hover:bg-slate-700 hover:text-[#EAFBFF]"
                 aria-label="Сайт"
               >
                 <Globe className="w-4 h-4" />
               </a>
               <a
                 href="#"
-                className="w-9 h-9 flex items-center justify-center rounded-lg bg-slate-800 text-slate-50 hover:bg-slate-700 hover:text-white transition-all duration-200"
+                className="flex h-9 w-9 items-center justify-center rounded-lg bg-slate-800 text-[#CBD5E1] transition-all duration-200 hover:bg-slate-700 hover:text-[#EAFBFF]"
                 aria-label="Сообщения"
               >
                 <MessageCircle className="w-4 h-4" />
               </a>
               <a
                 href={`mailto:${CONTACT_EMAIL}`}
-                className="w-9 h-9 flex items-center justify-center rounded-lg bg-slate-800 text-slate-50 hover:bg-slate-700 hover:text-white transition-all duration-200"
+                className="flex h-9 w-9 items-center justify-center rounded-lg bg-slate-800 text-[#CBD5E1] transition-all duration-200 hover:bg-slate-700 hover:text-[#EAFBFF]"
                 aria-label="Email"
               >
                 <Mail className="w-4 h-4" />
@@ -87,17 +87,25 @@ export default function Footer() {
           </div>
 
           {/* Link Columns */}
-          {Object.values(footerLinks).map((section) => (
-            <div key={section.title}>
-              <h3 className="text-sm font-semibold text-white uppercase tracking-wider mb-4">
-                {section.title}
+          {Object.entries(footerLinks).map(([sectionKey, section]) => (
+            <div key={section.title} className="flex flex-col items-start">
+              <h3 className="mb-4 w-full text-left !text-[#EAFBFF]">
+                <span
+                  className={
+                    sectionKey === 'legal'
+                      ? 'block max-w-[12rem] !text-[#EAFBFF] text-sm font-bold leading-tight sm:text-base'
+                      : 'block !text-[#EAFBFF] text-lg font-bold leading-snug sm:text-xl'
+                  }
+                >
+                  {section.title}
+                </span>
               </h3>
-              <ul className="space-y-2.5">
+              <ul className="w-full space-y-2.5">
                 {section.links.map((link) => (
                   <li key={link.name}>
                     <Link
                       href={link.href}
-                      className="text-sm text-slate-50 hover:text-emerald-400 transition-colors duration-200"
+                      className="text-sm text-[#CBD5E1] transition-colors duration-200 hover:text-[#EAFBFF] hover:no-underline"
                     >
                       {link.name}
                     </Link>
@@ -110,10 +118,10 @@ export default function Footer() {
 
         {/* Bottom Bar */}
         <div className="py-6 border-t border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-sm text-slate-500">
+          <p className="text-sm !text-[#64748B]">
             &copy; 2024&ndash;2026 Поймай Жука. Все права защищены.
           </p>
-          <div className="flex items-center gap-3 text-sm text-slate-500">
+          <div className="flex items-center gap-3 text-sm">
             <Image
               src="/branding/levart-footer-logo.png"
               alt="Lev.Art"
@@ -121,7 +129,7 @@ export default function Footer() {
               height={44}
               className="h-11 w-11 rounded-full object-cover shadow-[0_0_0_1px_rgba(255,255,255,0.08)]"
             />
-            <p>Сделано с заботой о развитии каждого</p>
+            <p className="!text-[#64748B]">Сделано с заботой о развитии каждого</p>
           </div>
         </div>
       </div>

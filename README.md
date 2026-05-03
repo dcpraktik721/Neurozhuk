@@ -164,7 +164,7 @@ Healthcheck:
 curl http://localhost:3000/api/health
 ```
 
-Expected response: HTTP 200 with `{"status":"ok","service":"neurozhuk",...}`.
+Expected response: HTTP 200 with `{"status":"ok"}`.
 
 ## Timeweb Cloud App Platform deployment
 
@@ -199,6 +199,7 @@ Production env:
 | `NEXT_PUBLIC_SUPABASE_URL` | yes | Supabase project URL |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | yes | Supabase anon/publishable key |
 | `NEXT_PUBLIC_SITE_URL` | yes | `https://neurozhuk.ru` |
+| `SECURITY_ALLOWED_ORIGINS` | no | comma-separated extra same-origin hosts for technical deploy domains |
 | `NODE_ENV` | yes | `production` |
 | `PORT` | yes | `3000` |
 

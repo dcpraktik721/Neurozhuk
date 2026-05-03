@@ -90,7 +90,23 @@ const SESSION_LIMITS = {
   maxStreak: 100_000,
   maxLevel: 1_000,
   maxCombo: 100_000,
+  maxAttemptsPerSecond: 12,
+  maxAttemptGrace: 20,
 };
+
+function computeAccuracy(correctAnswers: number, totalAttempts: number): number {
+  if (totalAttempts === 0) return 100;
+  return Math.round((correctAnswers / totalAttempts) * 10_000) / 100;
+}
+
+function maxScoreForCorrectAnswers(totalCorrect: number): number {
+  const fullGroups = Math.floor(totalCorrect / 5);
+  const remainder = totalCorrect % 5;
+  const floorSum =
+    5 * ((fullGroups * (fullGroups - 1)) / 2) + fullGroups * (remainder + 1);
+
+  return 10 * totalCorrect + 5 * floorSum;
+}
 
 export function validateSessionInput(
   body: unknown,
@@ -122,7 +138,7 @@ export function validateSessionInput(
   });
   if (!totalAttempts.ok) return totalAttempts;
 
-  // accuracy is allowed to be a decimal 0..100
+  // Accept the field for backward compatibility, but overwrite it below.
   const accuracy = num(b.accuracy ?? 0, 'accuracy', { min: 0, max: 100 });
   if (!accuracy.ok) return accuracy;
 
@@ -212,6 +228,25 @@ export function validateSessionInput(
       error: 'Поле «maxCombo» не может превышать «totalCorrect».',
     };
   }
+  const maxAttemptsForDuration =
+    duration.value === 0
+      ? SESSION_LIMITS.maxAttemptGrace
+      : duration.value * SESSION_LIMITS.maxAttemptsPerSecond +
+        SESSION_LIMITS.maxAttemptGrace;
+  if (totalAttempts.value > maxAttemptsForDuration) {
+    return {
+      ok: false,
+      error: 'Количество попыток не соответствует длительности сессии.',
+    };
+  }
+  if (score.value > maxScoreForCorrectAnswers(totalCorrect.value)) {
+    return {
+      ok: false,
+      error: 'Поле «score» не соответствует количеству правильных ответов.',
+    };
+  }
+
+  const serverAccuracy = computeAccuracy(correctAnswers.value, totalAttempts.value);
 
   return {
     ok: true,
@@ -219,7 +254,7 @@ export function validateSessionInput(
       score: score.value,
       correctAnswers: correctAnswers.value,
       totalAttempts: totalAttempts.value,
-      accuracy: accuracy.value,
+      accuracy: serverAccuracy,
       duration: duration.value,
       mode: modeRaw as AllowedMode,
       rank: rank.value,

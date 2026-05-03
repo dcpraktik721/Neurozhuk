@@ -5,6 +5,10 @@
 // GET  /api/sessions — Get paginated session history
 
 import { NextResponse, type NextRequest } from 'next/server';
+import { getRank } from '@/types';
+import { recordSecurityEvent } from '@/lib/security/audit-log';
+import { validateStateChangingOrigin } from '@/lib/security/origin';
+import { getClientIp, hashForRateLimit, rateLimit, rateLimitedJson } from '@/lib/security/rate-limit';
 import { createClient, isSupabaseConfigured } from '@/lib/supabase/server';
 import { parsePagination, validateSessionInput } from '@/lib/validation/api';
 
@@ -29,6 +33,19 @@ function rowToSession(row: Record<string, unknown>) {
 }
 
 export async function POST(request: NextRequest) {
+  const ip = getClientIp(request.headers);
+  const ipHash = hashForRateLimit(ip);
+  const ipLimit = rateLimit(`api:sessions:post:ip:${ipHash}`, 120, 60_000);
+  if (!ipLimit.ok) {
+    recordSecurityEvent({
+      type: 'api.sessions.post.rate_limited',
+      outcome: 'blocked',
+      ipHash,
+      route: '/api/sessions',
+    });
+    return rateLimitedJson(ipLimit.retryAfter);
+  }
+
   try {
     if (!isSupabaseConfigured()) {
       return NextResponse.json(
@@ -47,6 +64,29 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    const userLimit = rateLimit(`api:sessions:post:user:${user.id}`, 30, 60_000);
+    if (!userLimit.ok) {
+      recordSecurityEvent({
+        type: 'api.sessions.post.user_rate_limited',
+        outcome: 'blocked',
+        actorId: user.id,
+        ipHash,
+        route: '/api/sessions',
+      });
+      return rateLimitedJson(userLimit.retryAfter);
+    }
+
+    if (!validateStateChangingOrigin(request)) {
+      recordSecurityEvent({
+        type: 'api.sessions.post.bad_origin',
+        outcome: 'blocked',
+        actorId: user.id,
+        ipHash,
+        route: '/api/sessions',
+      });
+      return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+    }
+
     let body: unknown;
     try {
       body = await request.json();
@@ -62,6 +102,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: parsed.error }, { status: 400 });
     }
     const v = parsed.value;
+    const rank = getRank(v.score).name;
 
     const { data, error } = await supabase
       .from('game_sessions')
@@ -73,7 +114,7 @@ export async function POST(request: NextRequest) {
         accuracy: v.accuracy,
         duration: v.duration,
         mode: v.mode,
-        rank: v.rank,
+        rank,
         max_streak: v.maxStreak,
         level: v.level,
         max_combo: v.maxCombo,
@@ -102,6 +143,13 @@ export async function POST(request: NextRequest) {
 }
 
 export async function GET(request: NextRequest) {
+  const ip = getClientIp(request.headers);
+  const ipHash = hashForRateLimit(ip);
+  const ipLimit = rateLimit(`api:sessions:get:ip:${ipHash}`, 180, 60_000);
+  if (!ipLimit.ok) {
+    return rateLimitedJson(ipLimit.retryAfter);
+  }
+
   try {
     if (!isSupabaseConfigured()) {
       return NextResponse.json(
@@ -118,6 +166,11 @@ export async function GET(request: NextRequest) {
         { error: 'Необходима авторизация.', sessions: [] },
         { status: 401 }
       );
+    }
+
+    const userLimit = rateLimit(`api:sessions:get:user:${user.id}`, 90, 60_000);
+    if (!userLimit.ok) {
+      return rateLimitedJson(userLimit.retryAfter);
     }
 
     const { limit, offset } = parsePagination(request.nextUrl.searchParams);

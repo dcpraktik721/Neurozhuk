@@ -8,6 +8,7 @@
 
 import { useEffect, useState, useCallback } from 'react';
 import { createClient, isSupabaseConfigured } from '@/lib/supabase/client';
+import { validatePasswordPolicy } from '@/lib/security/password-policy';
 import type { User, Session, AuthChangeEvent } from '@supabase/supabase-js';
 
 interface UserProfile {
@@ -138,6 +139,10 @@ export function useAuth(): AuthState {
     if (!configured) {
       return { error: 'Supabase не настроен. Регистрация недоступна.' };
     }
+    const passwordError = validatePasswordPolicy(password);
+    if (passwordError) {
+      return { error: passwordError };
+    }
     setError(null);
     try {
       const supabase = createClient();
@@ -193,13 +198,9 @@ export function useAuth(): AuthState {
 // ── Helpers ──
 
 function translateAuthError(message: string): string {
-  const map: Record<string, string> = {
-    'Invalid login credentials': 'Неверный email или пароль.',
-    'Email not confirmed': 'Email не подтверждён. Проверьте почту.',
-    'User already registered': 'Пользователь с таким email уже зарегистрирован.',
-    'Password should be at least 6 characters': 'Пароль должен содержать минимум 6 символов.',
-    'Signup requires a valid password': 'Введите корректный пароль.',
-    'Unable to validate email address: invalid format': 'Некорректный формат email.',
-  };
-  return map[message] || `Ошибка авторизации: ${message}`;
+  if (message === 'Password should be at least 6 characters') {
+    return 'Пароль не соответствует требованиям безопасности.';
+  }
+
+  return 'Не удалось выполнить операцию. Проверьте данные и попробуйте позже.';
 }

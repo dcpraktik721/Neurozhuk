@@ -6,7 +6,11 @@
 
 'use server';
 
+import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
+import { recordSecurityEvent, hashIdentifier } from '@/lib/security/audit-log';
+import { validatePasswordPolicy } from '@/lib/security/password-policy';
+import { getClientIp, hashForRateLimit, rateLimit } from '@/lib/security/rate-limit';
 import { createClient, isSupabaseConfigured } from './server';
 
 export interface AuthResult {
@@ -24,6 +28,23 @@ function safeRedirectPath(raw: FormDataEntryValue | null): string {
   return value;
 }
 
+const AUTH_RATE_LIMIT_ERROR = 'Слишком много попыток. Подождите немного и попробуйте снова.';
+const SIGN_IN_ERROR = 'Не удалось войти. Проверьте email и пароль.';
+const SIGN_UP_ERROR = 'Не удалось создать аккаунт. Проверьте данные и попробуйте позже.';
+
+async function getAuthRequestContext() {
+  const headerStore = await headers();
+  const ip = getClientIp(headerStore);
+  return {
+    ip,
+    ipHash: hashIdentifier(ip),
+  };
+}
+
+function normalizeEmail(raw: FormDataEntryValue | null): string {
+  return typeof raw === 'string' ? raw.trim().toLowerCase() : '';
+}
+
 /**
  * Sign up a new user with email, password, display name and age group.
  * Creates the auth user; the DB trigger will auto-create the profile
@@ -38,9 +59,23 @@ export async function signUp(formData: FormData): Promise<AuthResult> {
     return { error: 'Supabase не настроен. Регистрация недоступна.' };
   }
 
-  const email = formData.get('email') as string;
+  const { ipHash } = await getAuthRequestContext();
+  const signupLimit = rateLimit(`auth:signup:${ipHash}`, 3, 60 * 60 * 1000);
+  if (!signupLimit.ok) {
+    recordSecurityEvent({
+      type: 'auth.signup.rate_limited',
+      outcome: 'blocked',
+      ipHash,
+      reason: 'fixed-window limit exceeded',
+    });
+    return { error: AUTH_RATE_LIMIT_ERROR };
+  }
+
+  const email = normalizeEmail(formData.get('email'));
   const password = formData.get('password') as string;
-  const displayName = formData.get('displayName') as string;
+  const displayNameRaw = formData.get('displayName');
+  const displayName =
+    typeof displayNameRaw === 'string' ? displayNameRaw.trim() : '';
   const pdnConsent = formData.get('pdnConsent');
   const ageGroupRaw = formData.get('ageGroup');
   const ageGroup =
@@ -50,8 +85,13 @@ export async function signUp(formData: FormData): Promise<AuthResult> {
     return { error: 'Email и пароль обязательны.' };
   }
 
-  if (password.length < 6) {
-    return { error: 'Пароль должен содержать минимум 6 символов.' };
+  const passwordError = validatePasswordPolicy(password);
+  if (passwordError) {
+    return { error: passwordError };
+  }
+
+  if (displayName.length > 64) {
+    return { error: 'Имя или никнейм не должен быть длиннее 64 символов.' };
   }
 
   if (pdnConsent !== 'accepted') {
@@ -72,7 +112,14 @@ export async function signUp(formData: FormData): Promise<AuthResult> {
   });
 
   if (error) {
-    return { error: translateError(error.message) };
+    recordSecurityEvent({
+      type: 'auth.signup.failed',
+      outcome: 'failure',
+      subjectHash: hashForRateLimit(email),
+      ipHash,
+      reason: error.message,
+    });
+    return { error: SIGN_UP_ERROR };
   }
 
   // If we got a session immediately (email confirmation disabled), make
@@ -87,6 +134,14 @@ export async function signUp(formData: FormData): Promise<AuthResult> {
       .eq('id', signUpData.user.id);
   }
 
+  recordSecurityEvent({
+    type: 'auth.signup.succeeded',
+    outcome: 'success',
+    actorId: signUpData.user?.id,
+    subjectHash: hashForRateLimit(email),
+    ipHash,
+  });
+
   redirect('/dashboard');
 }
 
@@ -98,11 +153,28 @@ export async function signIn(formData: FormData): Promise<AuthResult> {
     return { error: 'Supabase не настроен. Авторизация недоступна.' };
   }
 
-  const email = formData.get('email') as string;
+  const { ipHash } = await getAuthRequestContext();
+  const email = normalizeEmail(formData.get('email'));
   const password = formData.get('password') as string;
 
   if (!email || !password) {
     return { error: 'Email и пароль обязательны.' };
+  }
+
+  const signInLimit = rateLimit(
+    `auth:signin:${ipHash}:${hashForRateLimit(email)}`,
+    5,
+    15 * 60 * 1000,
+  );
+  if (!signInLimit.ok) {
+    recordSecurityEvent({
+      type: 'auth.signin.rate_limited',
+      outcome: 'blocked',
+      subjectHash: hashForRateLimit(email),
+      ipHash,
+      reason: 'fixed-window limit exceeded',
+    });
+    return { error: AUTH_RATE_LIMIT_ERROR };
   }
 
   const supabase = await createClient();
@@ -113,8 +185,22 @@ export async function signIn(formData: FormData): Promise<AuthResult> {
   });
 
   if (error) {
-    return { error: translateError(error.message) };
+    recordSecurityEvent({
+      type: 'auth.signin.failed',
+      outcome: 'failure',
+      subjectHash: hashForRateLimit(email),
+      ipHash,
+      reason: error.message,
+    });
+    return { error: SIGN_IN_ERROR };
   }
+
+  recordSecurityEvent({
+    type: 'auth.signin.succeeded',
+    outcome: 'success',
+    subjectHash: hashForRateLimit(email),
+    ipHash,
+  });
 
   redirect(safeRedirectPath(formData.get('redirect')));
 }
@@ -133,16 +219,3 @@ export async function signOut(): Promise<void> {
 }
 
 // ── Helpers ──
-
-function translateError(message: string): string {
-  const translations: Record<string, string> = {
-    'Invalid login credentials': 'Неверный email или пароль.',
-    'Email not confirmed': 'Email не подтверждён. Проверьте почту.',
-    'User already registered': 'Пользователь с таким email уже зарегистрирован.',
-    'Password should be at least 6 characters': 'Пароль должен содержать минимум 6 символов.',
-    'Signup requires a valid password': 'Введите корректный пароль.',
-    'Unable to validate email address: invalid format': 'Некорректный формат email.',
-    'Email rate limit exceeded': 'Слишком много попыток. Подождите немного.',
-  };
-  return translations[message] || `Ошибка: ${message}`;
-}

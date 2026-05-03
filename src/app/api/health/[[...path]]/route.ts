@@ -1,21 +1,15 @@
 import { NextResponse } from 'next/server';
-import { isSupabaseConfigured } from '@/lib/supabase/server';
+import { getClientIp, hashForRateLimit, rateLimit } from '@/lib/security/rate-limit';
 
 export const dynamic = 'force-dynamic';
 
 export function GET(request: Request) {
-  console.info('[healthcheck] GET', {
-    url: request.url,
-    host: request.headers.get('host'),
-    userAgent: request.headers.get('user-agent'),
-  });
+  const limited = checkHealthRateLimit(request);
+  if (limited) return limited;
 
   return NextResponse.json(
     {
       status: 'ok',
-      service: 'neurozhuk',
-      supabaseConfigured: isSupabaseConfigured(),
-      timestamp: new Date().toISOString(),
     },
     {
       headers: {
@@ -26,15 +20,28 @@ export function GET(request: Request) {
 }
 
 export function HEAD(request: Request) {
-  console.info('[healthcheck] HEAD', {
-    url: request.url,
-    host: request.headers.get('host'),
-    userAgent: request.headers.get('user-agent'),
-  });
+  const limited = checkHealthRateLimit(request);
+  if (limited) return limited;
 
   return new NextResponse(null, {
     status: 200,
     headers: {
+      'Cache-Control': 'no-store',
+    },
+  });
+}
+
+function checkHealthRateLimit(request: Request): NextResponse | null {
+  const ip = getClientIp(request.headers);
+  const ipHash = hashForRateLimit(ip);
+  const limit = rateLimit(`api:health:${ipHash}`, 120, 60_000);
+
+  if (limit.ok) return null;
+
+  return new NextResponse(null, {
+    status: 429,
+    headers: {
+      'Retry-After': String(limit.retryAfter),
       'Cache-Control': 'no-store',
     },
   });

@@ -4,6 +4,7 @@ import { useState, useTransition } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { Bug, Mail, Lock, Eye, EyeOff, User, UserPlus, AlertCircle, Loader2 } from 'lucide-react';
+import { MIN_PASSWORD_LENGTH, validatePasswordPolicy } from '@/lib/security/password-policy';
 import { signUp } from '@/lib/supabase/auth-actions';
 
 export default function RegisterPage() {
@@ -24,6 +25,11 @@ export default function RegisterPage() {
 
     if (password !== confirmPassword) {
       setError('Пароли не совпадают');
+      return;
+    }
+    const passwordError = validatePasswordPolicy(password);
+    if (passwordError) {
+      setError(passwordError);
       return;
     }
     if (!agreed) {
@@ -100,6 +106,7 @@ export default function RegisterPage() {
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder="Можно оставить пустым"
+                  maxLength={64}
                   className="w-full pl-11 pr-4 py-3 rounded-xl border border-slate-200 bg-slate-50 text-slate-900 placeholder:text-slate-50 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all"
                   disabled={isPending}
                 />
@@ -146,10 +153,10 @@ export default function RegisterPage() {
                   type={showPassword ? 'text' : 'password'}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Минимум 6 символов"
+                  placeholder={`Минимум ${MIN_PASSWORD_LENGTH} символов, буквы и цифры`}
                   className="w-full pl-11 pr-12 py-3 rounded-xl border border-slate-200 bg-slate-50 text-slate-900 placeholder:text-slate-50 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all"
                   required
-                  minLength={6}
+                  minLength={MIN_PASSWORD_LENGTH}
                   disabled={isPending}
                 />
                 <button
@@ -184,7 +191,7 @@ export default function RegisterPage() {
                   placeholder="Повторите пароль"
                   className="w-full pl-11 pr-12 py-3 rounded-xl border border-slate-200 bg-slate-50 text-slate-900 placeholder:text-slate-50 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all"
                   required
-                  minLength={6}
+                  minLength={MIN_PASSWORD_LENGTH}
                   disabled={isPending}
                 />
                 <button

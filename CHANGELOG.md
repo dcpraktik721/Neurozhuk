@@ -6,6 +6,28 @@
 - добавлять запись при каждом заметном изменении UI, логики, инфраструктуры или деплоя;
 - указывать дату, область изменения, краткий результат и статус выкладки.
 
+## 2026-05-03
+
+### Security hardening
+- Область: auth, API, runtime hardening, dependencies
+- Изменение: усилены security headers и отключен `x-powered-by`; добавлены in-memory rate-limit, state-changing Origin/Referer checks, нейтральные auth-ошибки, парольная политика от 8 символов, серверный пересчет accuracy/rank и score integrity checks; `/api/health` очищен от fingerprint/debug-полей и логирования user-agent
+- Файлы:
+  - `next.config.ts`
+  - `src/lib/security/*`
+  - `src/lib/supabase/auth-actions.ts`
+  - `src/hooks/useAuth.ts`
+  - `src/app/auth/register/page.tsx`
+  - `src/app/api/sessions/route.ts`
+  - `src/app/api/achievements/route.ts`
+  - `src/app/api/stats/route.ts`
+  - `src/app/api/health/[[...path]]/route.ts`
+  - `src/lib/validation/api.ts`
+  - `public/.well-known/security.txt`
+  - `.github/dependabot.yml`
+  - `.github/workflows/security.yml`
+- Проверка: `npm run lint`, `npx tsc --noEmit`, `npm run build`, `npm audit --omit=dev`, local `curl` headers/health/rate-limit, standalone health smoke
+- Статус: локально проверено, подготовлено к redeploy
+
 ## 2026-05-02
 
 ### SEO technical foundation

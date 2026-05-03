@@ -3,10 +3,21 @@
 // ========================================
 // GET /api/stats — Get the authenticated user's aggregated stats
 
-import { NextResponse } from 'next/server';
+import { NextResponse, type NextRequest } from 'next/server';
+import { getClientIp, hashForRateLimit, rateLimit, rateLimitedJson } from '@/lib/security/rate-limit';
 import { createClient, isSupabaseConfigured } from '@/lib/supabase/server';
 
-export async function GET() {
+export async function GET(request: NextRequest) {
+  const ip = getClientIp(request.headers);
+  const ipHash = hashForRateLimit(ip);
+  const ipLimit = rateLimit(`api:stats:get:ip:${ipHash}`, 180, 60_000);
+  if (!ipLimit.ok) {
+    return rateLimitedJson(ipLimit.retryAfter, {
+      error: 'Слишком много запросов. Попробуйте позже.',
+      stats: null,
+    });
+  }
+
   try {
     if (!isSupabaseConfigured()) {
       return NextResponse.json(
@@ -23,6 +34,14 @@ export async function GET() {
         { error: 'Необходима авторизация.', stats: null },
         { status: 401 }
       );
+    }
+
+    const userLimit = rateLimit(`api:stats:get:user:${user.id}`, 90, 60_000);
+    if (!userLimit.ok) {
+      return rateLimitedJson(userLimit.retryAfter, {
+        error: 'Слишком много запросов. Попробуйте позже.',
+        stats: null,
+      });
     }
 
     const { data, error } = await supabase

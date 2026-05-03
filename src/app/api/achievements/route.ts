@@ -5,8 +5,10 @@
 // POST /api/achievements — Check & unlock new achievements
 
 import { NextResponse, type NextRequest } from 'next/server';
+import { recordSecurityEvent } from '@/lib/security/audit-log';
+import { validateStateChangingOrigin } from '@/lib/security/origin';
+import { getClientIp, hashForRateLimit, rateLimit, rateLimitedJson } from '@/lib/security/rate-limit';
 import { createClient, isSupabaseConfigured } from '@/lib/supabase/server';
-import { validateAchievementCheckInput } from '@/lib/validation/api';
 
 // ── Achievement Definitions ──
 
@@ -82,7 +84,17 @@ const ACHIEVEMENT_DEFS: AchievementDef[] = [
 
 export { ACHIEVEMENT_DEFS };
 
-export async function GET() {
+export async function GET(request: NextRequest) {
+  const ip = getClientIp(request.headers);
+  const ipHash = hashForRateLimit(ip);
+  const ipLimit = rateLimit(`api:achievements:get:ip:${ipHash}`, 180, 60_000);
+  if (!ipLimit.ok) {
+    return rateLimitedJson(ipLimit.retryAfter, {
+      error: 'Слишком много запросов. Попробуйте позже.',
+      achievements: [],
+    });
+  }
+
   try {
     if (!isSupabaseConfigured()) {
       return NextResponse.json({ achievements: [], definitions: ACHIEVEMENT_DEFS }, { status: 503 });
@@ -96,6 +108,14 @@ export async function GET() {
         { error: 'Необходима авторизация.', achievements: [] },
         { status: 401 }
       );
+    }
+
+    const userLimit = rateLimit(`api:achievements:get:user:${user.id}`, 90, 60_000);
+    if (!userLimit.ok) {
+      return rateLimitedJson(userLimit.retryAfter, {
+        error: 'Слишком много запросов. Попробуйте позже.',
+        achievements: [],
+      });
     }
 
     const { data, error } = await supabase
@@ -137,6 +157,22 @@ export async function GET() {
 }
 
 export async function POST(request: NextRequest) {
+  const ip = getClientIp(request.headers);
+  const ipHash = hashForRateLimit(ip);
+  const ipLimit = rateLimit(`api:achievements:post:ip:${ipHash}`, 120, 60_000);
+  if (!ipLimit.ok) {
+    recordSecurityEvent({
+      type: 'api.achievements.post.rate_limited',
+      outcome: 'blocked',
+      ipHash,
+      route: '/api/achievements',
+    });
+    return rateLimitedJson(ipLimit.retryAfter, {
+      error: 'Слишком много запросов. Попробуйте позже.',
+      newAchievements: [],
+    });
+  }
+
   try {
     if (!isSupabaseConfigured()) {
       return NextResponse.json(
@@ -155,24 +191,31 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Validate request body
-    let body: unknown;
-    try {
-      body = await request.json();
-    } catch {
-      return NextResponse.json(
-        { error: 'Некорректный JSON в теле запроса.', newAchievements: [] },
-        { status: 400 }
-      );
+    const userLimit = rateLimit(`api:achievements:post:user:${user.id}`, 30, 60_000);
+    if (!userLimit.ok) {
+      recordSecurityEvent({
+        type: 'api.achievements.post.user_rate_limited',
+        outcome: 'blocked',
+        actorId: user.id,
+        ipHash,
+        route: '/api/achievements',
+      });
+      return rateLimitedJson(userLimit.retryAfter, {
+        error: 'Слишком много запросов. Попробуйте позже.',
+        newAchievements: [],
+      });
     }
-    const parsed = validateAchievementCheckInput(body);
-    if (!parsed.ok) {
-      return NextResponse.json(
-        { error: parsed.error, newAchievements: [] },
-        { status: 400 }
-      );
+
+    if (!validateStateChangingOrigin(request)) {
+      recordSecurityEvent({
+        type: 'api.achievements.post.bad_origin',
+        outcome: 'blocked',
+        actorId: user.id,
+        ipHash,
+        route: '/api/achievements',
+      });
+      return NextResponse.json({ error: 'Forbidden', newAchievements: [] }, { status: 403 });
     }
-    const { score, accuracy } = parsed.value;
 
     // Fetch user stats
     const { data: stats } = await supabase
@@ -180,6 +223,17 @@ export async function POST(request: NextRequest) {
       .select('*')
       .eq('user_id', user.id)
       .single();
+
+    const { data: latestSession } = await supabase
+      .from('game_sessions')
+      .select('score, accuracy')
+      .eq('user_id', user.id)
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .maybeSingle();
+
+    const lastSessionScore = latestSession?.score ?? 0;
+    const lastSessionAccuracy = Number(latestSession?.accuracy ?? 0);
 
     // Fetch already unlocked achievements
     const { data: unlocked } = await supabase
@@ -201,10 +255,10 @@ export async function POST(request: NextRequest) {
           met = (stats?.total_sessions ?? 0) >= def.requirement.value;
           break;
         case 'score':
-          met = (score ?? 0) >= def.requirement.value;
+          met = lastSessionScore >= def.requirement.value;
           break;
         case 'accuracy':
-          met = (accuracy ?? 0) >= def.requirement.value;
+          met = lastSessionAccuracy >= def.requirement.value;
           break;
         case 'streak':
           met = (stats?.current_streak ?? 0) >= def.requirement.value;

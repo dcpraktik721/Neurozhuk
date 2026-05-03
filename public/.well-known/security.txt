@@ -1,0 +1,4 @@
+Contact: mailto:levart72@mail.ru
+Expires: 2027-05-03T00:00:00.000Z
+Preferred-Languages: ru, en
+Canonical: https://neurozhuk.ru/.well-known/security.txt

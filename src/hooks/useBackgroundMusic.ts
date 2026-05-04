@@ -7,7 +7,7 @@
 
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 
 interface UseBackgroundMusicOptions {
   /** Audio source URL (served from /public). */
@@ -26,7 +26,7 @@ interface UseBackgroundMusicControls {
 }
 
 function attemptPlay(audio: HTMLAudioElement) {
-  audio.play().catch(() => {
+  return audio.play().catch(() => {
     // Autoplay blocked — ignore silently. The next direct user gesture
     // (start/resume/toggle) will attempt playback again.
   });
@@ -39,39 +39,77 @@ export function useBackgroundMusic({
   volume = 0.4,
 }: UseBackgroundMusicOptions): UseBackgroundMusicControls {
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const cleanupAudioRef = useRef<(() => void) | null>(null);
+  const pendingPlayRef = useRef(false);
+  const latestStateRef = useRef({ enabled, shouldPlay, volume });
 
-  // Initialise audio element once per src change
   useEffect(() => {
-    if (typeof window === 'undefined') return;
-    const audio = new Audio(src);
-    audio.loop = true;
-    audio.preload = 'auto';
-    audio.volume = volume;
-    audio.load();
-    audioRef.current = audio;
-
-    return () => {
-      audio.pause();
-      audio.src = '';
-      audioRef.current = null;
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [src]);
-
-  // Track volume changes
-  useEffect(() => {
+    latestStateRef.current = { enabled, shouldPlay, volume };
     if (audioRef.current) {
       audioRef.current.volume = Math.max(0, Math.min(1, volume));
     }
-  }, [volume]);
+  }, [enabled, shouldPlay, volume]);
+
+  const playAudio = useCallback((audio: HTMLAudioElement) => {
+    if (!latestStateRef.current.enabled) return;
+    pendingPlayRef.current = true;
+    void attemptPlay(audio).finally(() => {
+      pendingPlayRef.current = false;
+    });
+  }, []);
+
+  const ensureAudio = useCallback(() => {
+    if (typeof window === 'undefined') return null;
+    if (audioRef.current) return audioRef.current;
+
+    const audio = new Audio(src);
+    audio.loop = true;
+    audio.preload = 'auto';
+    audio.volume = Math.max(0, Math.min(1, latestStateRef.current.volume));
+
+    const handleCanPlayThrough = () => {
+      if (
+        pendingPlayRef.current &&
+        latestStateRef.current.enabled &&
+        latestStateRef.current.shouldPlay
+      ) {
+        playAudio(audio);
+      }
+    };
+
+    audio.addEventListener('canplaythrough', handleCanPlayThrough);
+    audio.load();
+    audioRef.current = audio;
+    cleanupAudioRef.current = () => {
+      audio.removeEventListener('canplaythrough', handleCanPlayThrough);
+    };
+
+    return audio;
+  }, [playAudio, src]);
+
+  // Initialise audio element once per src change so the first Start click
+  // does not have to create and fetch the MP3 from scratch.
+  useEffect(() => {
+    const audio = ensureAudio();
+    if (!audio) return;
+
+    return () => {
+      cleanupAudioRef.current?.();
+      cleanupAudioRef.current = null;
+      audio.pause();
+      audio.src = '';
+      audio.load();
+      audioRef.current = null;
+    };
+  }, [ensureAudio]);
 
   // Play / pause based on combined state
   useEffect(() => {
-    const audio = audioRef.current;
+    const audio = ensureAudio();
     if (!audio) return;
 
     if (enabled && shouldPlay) {
-      attemptPlay(audio);
+      playAudio(audio);
     } else {
       audio.pause();
       // Reset position when stopping fully (not while paused mid-game)
@@ -79,13 +117,13 @@ export function useBackgroundMusic({
         audio.currentTime = 0;
       }
     }
-  }, [enabled, shouldPlay]);
+  }, [enabled, ensureAudio, playAudio, shouldPlay]);
 
   return {
     playNow() {
-      const audio = audioRef.current;
+      const audio = ensureAudio();
       if (!audio || !enabled) return;
-      attemptPlay(audio);
+      playAudio(audio);
     },
     pauseNow(reset = false) {
       const audio = audioRef.current;

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useCallback, useRef } from 'react';
+import { preload } from 'react-dom';
 import { Bug } from 'lucide-react';
 import type { GameSession, GameMode, GameState, DifficultyMode, Achievement } from '@/types';
 import type { GameEngine } from '@/lib/game/engine';
@@ -20,6 +21,12 @@ const MUSIC_SRC = '/audio/frog-game.mp3';
 const MUSIC_PREF_KEY = 'poymai-zhuka:music-enabled';
 
 export default function PlayPage() {
+  preload(MUSIC_SRC, {
+    as: 'audio',
+    type: 'audio/mpeg',
+    fetchPriority: 'high',
+  });
+
   // Core game state
   const [gameState, setGameState] = useState<GameState>('idle');
   const [mode, setMode] = useState<GameMode>('normal');

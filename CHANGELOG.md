@@ -8,6 +8,15 @@
 
 ## 2026-05-04
 
+### Background music start latency fix
+- Область: play flow, background music
+- Изменение: устранена задержка старта музыки при начале игры; для `/play` добавлен preload MP3, а `useBackgroundMusic` теперь заранее создает и загружает `Audio`, сохраняет прямой запуск из пользовательского действия и повторяет старт после готовности буфера
+- Файлы:
+  - `src/app/play/page.tsx`
+  - `src/hooks/useBackgroundMusic.ts`
+- Проверка: `npm run lint`, `npx tsc --noEmit`, `npm run build`, локальная проверка `/play` на наличие audio preload и доступность `/audio/frog-game.mp3`
+- Статус: локально проверено, подготовлено к redeploy
+
 ### Rank system expansion
 - Область: game progression, ranks, rules UI
 - Изменение: ранговая система расширена после уровня `Совершенство`; добавлены 20 новых рангов до `Бесконечность (27390+)`, а сетка списка званий в правилах уплотнена для корректного отображения длинной шкалы

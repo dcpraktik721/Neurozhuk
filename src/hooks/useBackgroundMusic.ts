@@ -20,12 +20,24 @@ interface UseBackgroundMusicOptions {
   volume?: number;
 }
 
+interface UseBackgroundMusicControls {
+  playNow: () => void;
+  pauseNow: (reset?: boolean) => void;
+}
+
+function attemptPlay(audio: HTMLAudioElement) {
+  audio.play().catch(() => {
+    // Autoplay blocked — ignore silently. The next direct user gesture
+    // (start/resume/toggle) will attempt playback again.
+  });
+}
+
 export function useBackgroundMusic({
   src,
   enabled,
   shouldPlay,
   volume = 0.4,
-}: UseBackgroundMusicOptions) {
+}: UseBackgroundMusicOptions): UseBackgroundMusicControls {
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   // Initialise audio element once per src change
@@ -35,6 +47,7 @@ export function useBackgroundMusic({
     audio.loop = true;
     audio.preload = 'auto';
     audio.volume = volume;
+    audio.load();
     audioRef.current = audio;
 
     return () => {
@@ -58,12 +71,7 @@ export function useBackgroundMusic({
     if (!audio) return;
 
     if (enabled && shouldPlay) {
-      // play() returns a promise that may reject due to autoplay policy.
-      // We trigger it from a user gesture (Start button), so it should succeed.
-      audio.play().catch(() => {
-        // Autoplay blocked — ignore silently. The music will start on the
-        // next user-driven state change.
-      });
+      attemptPlay(audio);
     } else {
       audio.pause();
       // Reset position when stopping fully (not while paused mid-game)
@@ -72,4 +80,20 @@ export function useBackgroundMusic({
       }
     }
   }, [enabled, shouldPlay]);
+
+  return {
+    playNow() {
+      const audio = audioRef.current;
+      if (!audio || !enabled) return;
+      attemptPlay(audio);
+    },
+    pauseNow(reset = false) {
+      const audio = audioRef.current;
+      if (!audio) return;
+      audio.pause();
+      if (reset) {
+        audio.currentTime = 0;
+      }
+    },
+  };
 }

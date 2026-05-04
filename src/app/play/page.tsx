@@ -47,9 +47,6 @@ export default function PlayPage() {
   // Music state — persisted in localStorage, default ON.
   // Hook uses useSyncExternalStore so we never setState in an effect.
   const [musicEnabled, setMusicEnabled] = useLocalStorageBoolean(MUSIC_PREF_KEY, true);
-  const handleMusicToggle = useCallback(() => {
-    setMusicEnabled((prev) => !prev);
-  }, [setMusicEnabled]);
 
   // Persistence state
   const { saveSession, checkAchievements } = useGameSessions();
@@ -150,37 +147,71 @@ export default function PlayPage() {
     setTotalWrong(0);
   }, []);
 
+  // Background music: play during active game while in `playing`,
+  // stop on idle / ended and pause immediately on pause/reset.
+  const music = useBackgroundMusic({
+    src: MUSIC_SRC,
+    enabled: musicEnabled,
+    shouldPlay: gameState === 'playing',
+    volume: 0.35,
+  });
+
+  const handleMusicToggle = useCallback(() => {
+    const next = !musicEnabled;
+    setMusicEnabled(next);
+
+    if (!next) {
+      music.pauseNow(gameState !== 'paused');
+      return;
+    }
+
+    if (gameState === 'playing' || gameState === 'paused') {
+      music.playNow();
+    }
+  }, [gameState, music, musicEnabled, setMusicEnabled]);
+
   // Control actions
   const handleStart = useCallback(() => {
     setShowResults(false);
     resetCounters();
+    music.playNow();
     engineRef.current?.start(mode, difficultyMode);
-  }, [mode, difficultyMode, resetCounters]);
+  }, [difficultyMode, mode, music, resetCounters]);
 
   const handlePause = useCallback(() => {
+    music.pauseNow();
     engineRef.current?.pause();
-  }, []);
+  }, [music]);
 
   const handleResume = useCallback(() => {
+    music.playNow();
     engineRef.current?.resume();
-  }, []);
+  }, [music]);
 
   const handleReset = useCallback(() => {
+    music.pauseNow(true);
     engineRef.current?.reset();
     resetCounters();
     setGameState('idle');
-  }, [resetCounters]);
+  }, [music, resetCounters]);
 
   const handleFinish = useCallback(() => {
     // Triggers engine.finish() which produces a GameSession via onGameEnd.
+    music.pauseNow(true);
     engineRef.current?.finish();
-  }, []);
+  }, [music]);
 
   const handlePlayAgain = useCallback(() => {
     setShowResults(false);
+    setLastSession(null);
+    setSaveStatus('idle');
+    setSaveError(null);
+    setNewAchievements([]);
     resetCounters();
-    engineRef.current?.start(mode, difficultyMode);
-  }, [mode, difficultyMode, resetCounters]);
+    music.pauseNow(true);
+    engineRef.current?.reset();
+    setGameState('idle');
+  }, [music, resetCounters]);
 
   const isActive = gameState === 'playing' || gameState === 'paused';
   const mobileStatLabelClassName = 'text-xs font-bold uppercase tracking-[0.08em]';
@@ -189,15 +220,6 @@ export default function PlayPage() {
     color: '#FFFFFF',
     textShadow: '0 1px 6px rgba(0,0,0,0.42)',
   } as const;
-
-  // Background music: play during active game (playing or paused),
-  // stop on idle / ended. Pauses during in-game pause.
-  useBackgroundMusic({
-    src: MUSIC_SRC,
-    enabled: musicEnabled,
-    shouldPlay: gameState === 'playing',
-    volume: 0.35,
-  });
 
   return (
     <>

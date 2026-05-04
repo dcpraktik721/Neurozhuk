@@ -26,6 +26,13 @@
 .claude/
 .code-review-graph/
 /tmp_*/
+CLAUDE_SETUP_LOCAL.md
+COLOR_FIX_PROMPT.md
+DIAGNOSTIC_REPORT.md
+SECURITY_AUDIT.md
+NEUROZHUK_SCIENCE_POPULAR_TECH_ARTICLE.doc
+scripts/check-claude-access.sh
+src/app/game-results-preview/
 
 # debug
 npm-debug.log*

@@ -8,6 +8,19 @@
 
 ## 2026-05-04
 
+### Repository documentation hygiene
+- Область: repository hygiene, documentation structure
+- Изменение: безопасные SEO, игровые и журнальные материалы вынесены из root в `docs/`; локальные Claude/preview/security/diagnostic артефакты добавлены в `.gitignore`, чтобы не попасть в GitHub и production deploy случайно
+- Файлы:
+  - `.gitignore`
+  - `.dockerignore`
+  - `docs/audits/LLM_SEO_AUDIT_NEUROZHUK.md`
+  - `docs/game/GAME_EQUATIONS_BY_DIFFICULTY.md`
+  - `docs/prompts/SEO_MASTER_PROMPT.md`
+  - `docs/articles/NEUROZHUK_SCIENCE_POPULAR_TECH_ARTICLE.docx`
+- Проверка: `git diff --check`, secret-scan commit candidates, `npm run lint`, `npx tsc --noEmit`, `npm run build`
+- Статус: локально проверено, runtime-код не затронут
+
 ### Game movement stability and repo cleanup
 - Область: game engine, repository hygiene
 - Изменение: добавлен верхний предел скорости жуков, исправлен редкий случай полного совпадения координат при антистеке, временные каталоги `tmp_*` удалены и добавлены в `.gitignore`

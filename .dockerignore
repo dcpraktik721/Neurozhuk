@@ -1,6 +1,8 @@
 .git
 .next
 node_modules
+docs
+tmp_*/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
@@ -16,4 +18,12 @@ coverage
 README-LAUNCHER.md
 AUDIT_NEUROZHUK.md
 MVP_FIX_PLAN.md
+CLAUDE_SETUP_LOCAL.md
+COLOR_FIX_PROMPT.md
+DIAGNOSTIC_REPORT.md
+SECURITY_AUDIT.md
+NEUROZHUK_SCIENCE_POPULAR_TECH_ARTICLE.doc
+NEUROZHUK_SCIENCE_POPULAR_TECH_ARTICLE.docx
+scripts/check-claude-access.sh
+src/app/game-results-preview/
 *.tsbuildinfo

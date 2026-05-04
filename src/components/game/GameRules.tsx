@@ -135,7 +135,7 @@ export default function GameRules({ isOpen, onClose }: GameRulesProps) {
               <Star className="w-5 h-5 text-purple-400" />
               <h3 className="text-lg font-semibold text-white">Звания</h3>
             </div>
-            <div className="grid grid-cols-2 gap-1.5">
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-1.5">
               {RANKS.map((rank) => (
                 <div
                   key={rank.name}

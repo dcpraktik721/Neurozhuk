@@ -6,6 +6,25 @@
 - добавлять запись при каждом заметном изменении UI, логики, инфраструктуры или деплоя;
 - указывать дату, область изменения, краткий результат и статус выкладки.
 
+## 2026-05-04
+
+### Game results visual polish
+- Область: game results modal, end-of-session UI
+- Изменение: переработан экран итогов игры без изменения игровой логики; убран тяжелый серый вид, добавлен цельный dark arcade gradient, усилена читаемость итогового счета, ранга, карточек статистики и action-кнопок
+- Файлы:
+  - `src/components/game/GameResults.tsx`
+- Проверка: `npm run lint`, локальный visual preview `/game-results-preview`
+- Статус: закоммичено локально, ожидает redeploy
+
+### Play flow and music controls
+- Область: play flow, background music, replay behavior
+- Изменение: музыка теперь стартует и останавливается синхронно с действиями пользователя (`start`, `pause`, `resume`, `finish`, `reset`); кнопка `Играть ещё` возвращает игрока в меню `/play`, а не запускает новую сессию мгновенно
+- Файлы:
+  - `src/app/play/page.tsx`
+  - `src/hooks/useBackgroundMusic.ts`
+- Проверка: `npm run lint`, локальные HTTP-проверки `/` и `/play`, ручной smoke-flow
+- Статус: закоммичено локально и запушено в `main`, ожидает redeploy
+
 ## 2026-05-03
 
 ### Security hardening

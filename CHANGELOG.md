@@ -8,6 +8,15 @@
 
 ## 2026-05-04
 
+### Game movement stability and repo cleanup
+- Область: game engine, repository hygiene
+- Изменение: добавлен верхний предел скорости жуков, исправлен редкий случай полного совпадения координат при антистеке, временные каталоги `tmp_*` удалены и добавлены в `.gitignore`
+- Файлы:
+  - `src/lib/game/engine.ts`
+  - `.gitignore`
+- Проверка: `npm run lint`, `npx tsc --noEmit`, `npm run build`
+- Статус: локально проверено, подготовлено к redeploy
+
 ### Background music start latency fix
 - Область: play flow, background music
 - Изменение: устранена задержка старта музыки при начале игры; для `/play` добавлен preload MP3, а `useBackgroundMusic` теперь заранее создает и загружает `Audio`, сохраняет прямой запуск из пользовательского действия и повторяет старт после готовности буфера

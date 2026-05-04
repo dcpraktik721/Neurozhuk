@@ -25,6 +25,7 @@
 *.pem
 .claude/
 .code-review-graph/
+/tmp_*/
 
 # debug
 npm-debug.log*

@@ -48,6 +48,8 @@ const DEFAULT_CONFIG: GameConfig = {
   enemySize: 44,
 };
 
+const MAX_ENEMY_SPEED = 6;
+
 // ── Engine ──
 
 export class GameEngine {
@@ -411,7 +413,7 @@ export class GameEngine {
       y = isLeft ? 0 : h - sz;
     }
 
-    const speed = 1 + Math.random() * (this.level * 0.2);
+    const speed = Math.min(1 + Math.random() * (this.level * 0.2), MAX_ENEMY_SPEED);
 
     return {
       id: uid(),
@@ -472,10 +474,12 @@ export class GameEngine {
         const dx = (b.x + b.size / 2) - (a.x + a.size / 2);
         const dy = (b.y + b.size / 2) - (a.y + a.size / 2);
         const dist = Math.hypot(dx, dy);
-        if (dist < minDistance && dist > 0) {
+        if (dist < minDistance) {
+          const normalizedDist = dist || 1;
           const overlap = (minDistance - dist) / 2;
-          const nx = dx / dist;
-          const ny = dy / dist;
+          const angle = dist === 0 ? ((i + j) % 8) * (Math.PI / 4) : 0;
+          const nx = dist === 0 ? Math.cos(angle) : dx / normalizedDist;
+          const ny = dist === 0 ? Math.sin(angle) : dy / normalizedDist;
           a.x -= nx * overlap;
           a.y -= ny * overlap;
           b.x += nx * overlap;
